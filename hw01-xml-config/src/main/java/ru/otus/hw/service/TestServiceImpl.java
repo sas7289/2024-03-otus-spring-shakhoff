@@ -22,8 +22,8 @@ public class TestServiceImpl implements TestService {
         questionDao.findAll().forEach(q -> {
             ioService.printLine(q.text());
 
-            String answers = IntStream.range(1, q.answers().size())
-                .mapToObj(num -> String.format(ANSWER_TEMPLATE, num, q.answers().get(num - 1).text()))
+            String answers = IntStream.range(0, q.answers().size())
+                .mapToObj(answerIndex -> String.format(ANSWER_TEMPLATE, answerIndex + 1, q.answers().get(answerIndex).text()))
                 .collect(Collectors.joining("\n"));
             ioService.printLine(answers);
         });
