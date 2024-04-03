@@ -24,7 +24,7 @@ public class CsvQuestionDao implements QuestionDao {
         // https://opencsv.sourceforge.net/#collection_based_bean_fields_one_to_many_mappings
         // Использовать QuestionReadException
         // Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
-        try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("questions.csv")) {
+        try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName())) {
             List<QuestionDto> questionDTOs = new CsvToBeanBuilder(new InputStreamReader(resourceAsStream))
                 .withType(QuestionDto.class)
                 .withSkipLines(1)
