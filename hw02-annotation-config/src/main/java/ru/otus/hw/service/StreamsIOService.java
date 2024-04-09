@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
+import org.springframework.stereotype.Service;
 
+@Service
 public class StreamsIOService implements IOService {
     private static final int MAX_ATTEMPTS = 10;
 
