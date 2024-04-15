@@ -47,7 +47,7 @@ class ResultServiceImplTest {
         resultService.showResult(result);
         verify(ioService, times(3)).printLine(captor.capture());
 
-        Assertions.assertEquals(PASSED_TEST_EXPECTED_OUTPUT, captor.getAllValues().get(2));
+        Assertions.assertEquals(PASSED_TEST_EXPECTED_OUTPUT, captor.getAllValues().get(captor.getAllValues().size() - 1));
     }
 
     @DisplayName("Должен вывести сообщение о несдаче тестирования")
@@ -59,7 +59,7 @@ class ResultServiceImplTest {
         resultService.showResult(result);
         verify(ioService, times(3)).printLine(captor.capture());
 
-        Assertions.assertEquals(FAILURE_TEST_EXPECTED_OUTPUT, captor.getAllValues().get(2));
+        Assertions.assertEquals(FAILURE_TEST_EXPECTED_OUTPUT, captor.getAllValues().get(captor.getAllValues().size() - 1));
     }
 
     private static TestResult preparePassTestStudent() {
