@@ -62,15 +62,15 @@ class ResultServiceImplTest {
         Assertions.assertEquals(FAILURE_TEST_EXPECTED_OUTPUT, captor.getAllValues().get(captor.getAllValues().size() - 1));
     }
 
-    private static TestResult preparePassTestStudent() {
+    private TestResult preparePassTestStudent() {
         return prepareStudent(PASS_TEST_STUDENT_RIGHT_ANSWERS_COUNT);
     }
 
-    private static TestResult prepareFailureTestStudent() {
+    private TestResult prepareFailureTestStudent() {
         return prepareStudent(FAILURE_TEST_STUDENT_RIGHT_ANSWERS_COUNT);
     }
 
-    private static TestResult prepareStudent(int rightAnswerCount) {
+    private TestResult prepareStudent(int rightAnswerCount) {
         var student = new TestResult(new Student(FIRST_NAME, LAST_NAME));
         student.setRightAnswersCount(rightAnswerCount);
         return student;
