@@ -2,3 +2,8 @@
 Есть ли жизнь на Марсе?;Это науке пока не известно%true|Конечно. Красные (НЛО) это с Марса. А зеленые (НЛО) с Венеры%false|Точно нет%false
 Как нужно загружать ресурс из jar в Java?;ClassLoader#geResourceAsStream или ClassPathResource#getInputStream%true|ClassLoader#geResource#getFile + FileReader%false|Wingardium Leviosa%false
 Какой предпочтительный способ реакции на исключения?;@SneakyThrow%false|e.printStackTrace()%false|Проброс дальше с предварительным оборачиванием в бизнес-исключение (например, QuestionReadException)%true|Игнорирование исключения%false
+Какой из аббревиатур принадлежит Single Responsibility Principle?;SOLID%true|KISS%false|SoC%false
+Что означает аббреватура JRE?;Java Runtime Environment%true|Java Runtime Engine%false|Java Runtime Execution%false|Java Runtime Executor%false
+Какой из методов не принадлежит классу Object?;getClass()%false|equals(Object obj)%false|wait()%false|copy()%true
+Как используется ключевое слово this?;Как ссылка на родительский класс%false|Как ссылка на конструктор класса%false|Как ссылка на текущий объект (внутри класса этого объекта)%true
+Возможно ли множественное наследование в Java?;Да%false|Да, но только при наследорвании классов из пакета Collection%false|Нет, но можно использовать множественную имплементацию интерфейсов, что позволяет обойти данное ограничение%true
