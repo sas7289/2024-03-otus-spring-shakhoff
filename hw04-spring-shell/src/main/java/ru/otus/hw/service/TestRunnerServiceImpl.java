@@ -3,6 +3,7 @@ package ru.otus.hw.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
+import ru.otus.hw.security.StudentContext;
 
 @Service
 @RequiredArgsConstructor
@@ -10,7 +11,7 @@ public class TestRunnerServiceImpl implements TestRunnerService, CommandLineRunn
 
     private final TestService testService;
 
-    private final StudentService studentService;
+    private final StudentContext studentContext;
 
     private final ResultService resultService;
 
@@ -21,8 +22,7 @@ public class TestRunnerServiceImpl implements TestRunnerService, CommandLineRunn
 
     @Override
     public void run() {
-        var student = studentService.determineCurrentStudent();
-        var testResult = testService.executeTestFor(student);
-        resultService.showResult(testResult);
+        var testResult = testService.executeTestFor(studentContext.getStudent());
+        resultService.saveResult(studentContext.getStudent(), testResult);
     }
 }
