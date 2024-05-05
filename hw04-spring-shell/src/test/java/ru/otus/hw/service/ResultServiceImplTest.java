@@ -13,7 +13,6 @@ class ResultServiceImplTest {
 
     @Autowired
     private ResultService resultService;
-    //TODO правильно ли я понимаю, что при сканировании берётся пакет и по нему идёт сканирование пакета main?
 
     @Test
     public void shouldReturnTestResultByStudent() {
