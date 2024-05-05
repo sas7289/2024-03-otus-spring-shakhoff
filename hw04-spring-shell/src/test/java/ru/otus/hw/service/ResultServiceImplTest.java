@@ -1,5 +1,6 @@
 package ru.otus.hw.service;
 
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ class ResultServiceImplTest {
 
     @Autowired
     private ResultService resultService;
+    //TODO правильно ли я понимаю, что при сканировании берётся пакет и по нему идёт сканирование пакета main?
 
     @Test
     public void shouldReturnTestResultByStudent() {
@@ -23,7 +25,7 @@ class ResultServiceImplTest {
         resultService.saveResult(student_1, result_1);
         resultService.saveResult(student_2, result_2);
 
-        Assertions.assertEquals(result_1, resultService.getResult(student_1));
-        Assertions.assertEquals(result_2, resultService.getResult(student_2));
+        Assertions.assertEquals(Set.of(result_1), resultService.getResults(student_1));
+        Assertions.assertEquals(Set.of(result_2), resultService.getResults(student_2));
     }
 }
