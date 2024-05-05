@@ -1,26 +1,40 @@
 package ru.otus.hw.service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import java.util.Set;
 import org.springframework.stereotype.Service;
+import ru.otus.hw.config.LocaleConfig;
 import ru.otus.hw.config.TestConfig;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
 @Service
-@RequiredArgsConstructor
 public class ResultServiceImpl implements ResultService {
 
     private final TestConfig testConfig;
 
     private final LocalizedIOService ioService;
 
-    private final Map<Student, TestResult> studentTestResults = new HashMap<>();
+    private final Map<Student, Set<TestResult>> studentTestResults = new HashMap<>();
+
+    private final DateTimeFormatter formatter;
+
+    public ResultServiceImpl(TestConfig testConfig, LocalizedIOService ioService, LocaleConfig localeConfig) {
+        this.testConfig = testConfig;
+        this.ioService = ioService;
+
+        this.formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss", localeConfig.getLocale());
+    }
 
     @Override
     public void showResult(TestResult testResult) {
         ioService.printLine("");
+        ioService.printLineLocalized("ResultService.test.results");
+        ioService.printLine(testResult.getCompletionDate().format(formatter));
+        ioService.printLineLocalized("ResultService.test.results");
         ioService.printLineLocalized("ResultService.test.results");
         ioService.printFormattedLineLocalized("ResultService.student",
             testResult.getStudent().getFullName());

@@ -1,5 +1,6 @@
 package ru.otus.hw.service;
 
+import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ public class TestServiceImpl implements TestService {
 
             testResult.applyAnswer(question, question.answers().get(answerNumber - 1).isCorrect());
         }
+        testResult.setCompletionDate(LocalDateTime.now());
         return testResult;
     }
 }

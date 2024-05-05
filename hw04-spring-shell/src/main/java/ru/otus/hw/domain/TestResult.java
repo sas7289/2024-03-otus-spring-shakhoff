@@ -1,5 +1,6 @@
 package ru.otus.hw.domain;
 
+import java.time.LocalDateTime;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ public class TestResult {
     private final List<Question> answeredQuestions;
 
     private int rightAnswersCount;
+
+    private LocalDateTime completionDate;
 
     public TestResult(Student student) {
         this.student = student;
