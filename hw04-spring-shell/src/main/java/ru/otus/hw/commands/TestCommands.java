@@ -50,7 +50,8 @@ public class TestCommands {
 
     @ShellMethodAvailability({"run_test", "show_result"})
     public Availability isStudentLoggedIn() {
-        return studentContext.isStudentLoggedIn() ? Availability.available() : Availability.unavailable("Please, log in");
+        return studentContext.isStudentLoggedIn() ? Availability.available()
+            : Availability.unavailable("Please, log in");
     }
 
 }
