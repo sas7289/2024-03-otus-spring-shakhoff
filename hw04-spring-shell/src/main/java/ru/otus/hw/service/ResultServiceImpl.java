@@ -38,11 +38,17 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public void saveResult(Student student, TestResult testResult) {
-        this.studentTestResults.put(student, testResult);
+        if (this.studentTestResults.containsKey(student)) {
+            this.studentTestResults.get(student).add(testResult);
+        } else {
+            Set<TestResult> results = new HashSet<>();
+            results.add(testResult);
+            this.studentTestResults.put(student, results);
+        }
     }
 
     @Override
-    public TestResult getResult(Student student) {
+    public Set<TestResult> getResults(Student student) {
         return this.studentTestResults.get(student);
     }
 }
