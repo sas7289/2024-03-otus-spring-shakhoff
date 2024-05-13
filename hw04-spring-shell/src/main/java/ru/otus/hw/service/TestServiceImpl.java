@@ -1,5 +1,6 @@
 package ru.otus.hw.service;
 
+import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,14 +12,16 @@ import ru.otus.hw.domain.TestResult;
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
 
-    private final IOService ioService;
+    private final LocalizedIOService ioService;
 
     private final QuestionDao questionDao;
 
     @Override
     public TestResult executeTestFor(Student student) {
         ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
+        ioService.printLineLocalized("TestService.answer.the.questions");
+        ioService.printLine("");
+
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
@@ -29,10 +32,12 @@ public class TestServiceImpl implements TestService {
                 .forEach(value ->
                     ioService.printFormattedLine("\t%s. %s", value + 1, question.answers().get(value).text()));
 
-            int answerNumber = ioService.readIntForRange(1, question.answers().size(),
-                "The entered answer number does not correspond to the proposed answers. Enter a valid number");
+            int answerNumber = ioService.readIntForRangeLocalized(1, question.answers().size(),
+                "TestService.incorrect.input.message");
+
             testResult.applyAnswer(question, question.answers().get(answerNumber - 1).isCorrect());
         }
+        testResult.setCompletionDate(LocalDateTime.now());
         return testResult;
     }
 }
