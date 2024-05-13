@@ -26,7 +26,8 @@ public class TestServiceImpl implements TestService {
             ioService.printLine(question.text());
 
             IntStream.range(0, question.answers().size())
-                .forEach(value -> ioService.printFormattedLine("\t%s. %s", value + 1, question.answers().get(value).text()));
+                .forEach(value ->
+                    ioService.printFormattedLine("\t%s. %s", value + 1, question.answers().get(value).text()));
 
             int answerNumber = ioService.readIntForRange(1, question.answers().size(),
                 "The entered answer number does not correspond to the proposed answers. Enter a valid number");

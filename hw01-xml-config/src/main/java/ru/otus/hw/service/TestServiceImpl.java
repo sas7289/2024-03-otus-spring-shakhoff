@@ -23,7 +23,8 @@ public class TestServiceImpl implements TestService {
             ioService.printLine(q.text());
 
             String answers = IntStream.range(0, q.answers().size())
-                .mapToObj(answerIndex -> String.format(ANSWER_TEMPLATE, answerIndex + 1, q.answers().get(answerIndex).text()))
+                .mapToObj(answerIndex ->
+                    String.format(ANSWER_TEMPLATE, answerIndex + 1, q.answers().get(answerIndex).text()))
                 .collect(Collectors.joining("\n"));
             ioService.printLine(answers);
         });

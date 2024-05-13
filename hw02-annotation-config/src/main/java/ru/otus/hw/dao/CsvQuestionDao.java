@@ -19,7 +19,9 @@ import ru.otus.hw.exceptions.QuestionReadException;
 public class CsvQuestionDao implements QuestionDao {
 
     public static final int ROW_OFFSET = 1;
+
     public static final char QUESTION_SEPARATOR = ';';
+
     private final TestFileNameProvider fileNameProvider;
 
     @Override
@@ -29,7 +31,8 @@ public class CsvQuestionDao implements QuestionDao {
         // Использовать QuestionReadException
         // Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
 
-        try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName())) {
+        try (InputStream resourceAsStream = getClass().getClassLoader()
+            .getResourceAsStream(fileNameProvider.getTestFileName())) {
             List<QuestionDto> questionDTOs = new CsvToBeanBuilder(new InputStreamReader(resourceAsStream))
                 .withType(QuestionDto.class)
                 .withSkipLines(ROW_OFFSET)
