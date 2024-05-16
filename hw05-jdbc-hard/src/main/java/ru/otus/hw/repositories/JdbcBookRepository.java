@@ -173,7 +173,7 @@ public class JdbcBookRepository implements BookRepository {
                 .addValue(GENRE_ID, genre.getId()))
             .toArray(SqlParameterSource[]::new);
         namedParameterJdbcTemplate.batchUpdate("delete books_genres where book_id = :book_id "
-            + "AND genre_id = :genre_id)", params);
+            + "AND genre_id = :genre_id", params);
     }
 
     private static class BookRowMapper implements RowMapper<Book> {
@@ -193,7 +193,7 @@ public class JdbcBookRepository implements BookRepository {
         @Override
         public Book extractData(ResultSet rs) throws SQLException, DataAccessException {
             List<Genre> genres = new ArrayList<>();
-            long bookId = 0;
+            long bookId = -1;
             String bookTitle = "";
             long authorId = 0;
             String authorName = "";
@@ -207,7 +207,7 @@ public class JdbcBookRepository implements BookRepository {
                 genres.add(new Genre(genreId, genreName));
             }
             Author author = new Author(authorId, authorName);
-            return new Book(bookId, bookTitle, author, genres);
+            return bookId == -1 ? null : new Book(bookId, bookTitle, author, genres);
         }
     }
 
