@@ -28,22 +28,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JdbcBookRepository implements BookRepository {
 
-    private static final String ID = "id";
-
-    private static final String TITLE = "title";
-
-    private static final String AUTHOR_ID = "author_id";
-
-    private static final String BOOK_ID = "book_id";
-
-    private static final String GENRE_ID = "genre_id";
-
-    private static final String BOOK_TITLE = "book_title";
-
-    private static final String AUTHOR_NAME = "author_name";
-
-    private static final String GENRE_NAME = "genre_name";
-
     private final GenreRepository genreRepository;
 
     private final JdbcOperations jdbcOperations;
@@ -52,7 +36,7 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        Map<String, Long> params = Map.of(ID, id);
+        Map<String, Long> params = Map.of("id", id);
         return Optional.ofNullable(namedParameterJdbcTemplate.query(
             "select "
                 + " b.id as book_id, b.title as book_title,"
@@ -83,7 +67,7 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        Map<String, Long> params = Map.of(ID, id);
+        Map<String, Long> params = Map.of("id", id);
         namedParameterJdbcTemplate.update("delete from books where id = :id", params);
     }
 
@@ -96,7 +80,7 @@ public class JdbcBookRepository implements BookRepository {
 
     private List<BookGenreRelation> getAllGenreRelations() {
         return jdbcOperations.query("select book_id, genre_id from books_genres",
-            (rs, rowNum) -> new BookGenreRelation(rs.getLong(BOOK_ID), rs.getLong(GENRE_ID)));
+            (rs, rowNum) -> new BookGenreRelation(rs.getLong("book_id"), rs.getLong("genre_id")));
     }
 
     private void mergeBooksInfo(List<Book> booksWithoutGenres, List<Genre> genres,
@@ -124,8 +108,8 @@ public class JdbcBookRepository implements BookRepository {
     private Book insert(Book book) {
         var keyHolder = new GeneratedKeyHolder();
         SqlParameterSource params = new MapSqlParameterSource()
-            .addValue(TITLE, book.getTitle())
-            .addValue(AUTHOR_ID, book.getAuthor().getId());
+            .addValue("title", book.getTitle())
+            .addValue("author_id", book.getAuthor().getId());
         namedParameterJdbcTemplate.update("insert into books (title, author_id) values (:title, :author_id)",
             params, keyHolder);
 
@@ -139,9 +123,9 @@ public class JdbcBookRepository implements BookRepository {
             .orElseThrow();
 
         Map<String, Object> params = Map.of(
-            ID, book.getId(),
-            TITLE, book.getTitle(),
-            AUTHOR_ID, book.getAuthor().getId());
+            "id", book.getId(),
+            "title", book.getTitle(),
+            "author_id", book.getAuthor().getId());
         int updated = namedParameterJdbcTemplate.update("update books set title = :title, author_id = :author_id "
             + "where id = :id", params);
         if (updated == 0) {
@@ -157,8 +141,8 @@ public class JdbcBookRepository implements BookRepository {
     private void batchInsertGenresRelationsFor(Book book) {
         SqlParameterSource[] params = book.getGenres().stream()
             .map(genre -> new MapSqlParameterSource()
-                .addValue(BOOK_ID, book.getId())
-                .addValue(GENRE_ID, genre.getId()))
+                .addValue("book_id", book.getId())
+                .addValue("genre_id", genre.getId()))
             .toArray(SqlParameterSource[]::new);
         namedParameterJdbcTemplate.batchUpdate("insert into books_genres (book_id, genre_id)"
             + " values (:book_id, :genre_id)", params);
@@ -169,8 +153,8 @@ public class JdbcBookRepository implements BookRepository {
         //...
         SqlParameterSource[] params = book.getGenres().stream()
             .map(genre -> new MapSqlParameterSource()
-                .addValue(BOOK_ID, book.getId())
-                .addValue(GENRE_ID, genre.getId()))
+                .addValue("book_id", book.getId())
+                .addValue("genre_id", genre.getId()))
             .toArray(SqlParameterSource[]::new);
         namedParameterJdbcTemplate.batchUpdate("delete books_genres where book_id = :book_id "
             + "AND genre_id = :genre_id", params);
@@ -198,12 +182,12 @@ public class JdbcBookRepository implements BookRepository {
             long authorId = 0;
             String authorName = "";
             while (rs.next()) {
-                bookId = rs.getLong(BOOK_ID);
-                bookTitle = rs.getString(BOOK_TITLE);
-                authorId = rs.getLong(AUTHOR_ID);
-                authorName = rs.getString(AUTHOR_NAME);
-                long genreId = rs.getLong(GENRE_ID);
-                String genreName = rs.getString(GENRE_NAME);
+                bookId = rs.getLong("book_id");
+                bookTitle = rs.getString("book_title");
+                authorId = rs.getLong("author_id");
+                authorName = rs.getString("author_name");
+                long genreId = rs.getLong("genre_id");
+                String genreName = rs.getString("genre_name");
                 genres.add(new Genre(genreId, genreName));
             }
             Author author = new Author(authorId, authorName);
