@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JdbcBookRepositoryTest {
 
     @Autowired
-    private JdbcBookRepository repositoryJdbc;
+    private BookRepository repositoryJdbc;
 
     private List<Author> dbAuthors;
 
