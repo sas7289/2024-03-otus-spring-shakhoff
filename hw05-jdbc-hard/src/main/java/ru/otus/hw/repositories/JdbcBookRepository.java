@@ -176,22 +176,33 @@ public class JdbcBookRepository implements BookRepository {
 
         @Override
         public Book extractData(ResultSet rs) throws SQLException, DataAccessException {
+            Book book = null;
             List<Genre> genres = new ArrayList<>();
-            long bookId = -1;
-            String bookTitle = "";
-            long authorId = 0;
-            String authorName = "";
+
+            boolean isFirstRow = true;
+
             while (rs.next()) {
-                bookId = rs.getLong("book_id");
-                bookTitle = rs.getString("book_title");
-                authorId = rs.getLong("author_id");
-                authorName = rs.getString("author_name");
+                if (isFirstRow) {
+                    book = initBook(rs, genres);
+                    isFirstRow = false;
+                }
                 long genreId = rs.getLong("genre_id");
                 String genreName = rs.getString("genre_name");
                 genres.add(new Genre(genreId, genreName));
             }
-            Author author = new Author(authorId, authorName);
-            return bookId == -1 ? null : new Book(bookId, bookTitle, author, genres);
+            return book;
+        }
+
+        private static Book initBook(ResultSet rs, List<Genre> genres) throws SQLException {
+            Book book = new Book();
+            Author author = new Author();
+            book.setAuthor(author);
+            book.setGenres(genres);
+            book.setId(rs.getLong("book_id"));
+            book.setTitle(rs.getString("book_title"));
+            author.setId(rs.getLong("author_id"));
+            author.setFullName(rs.getString("author_name"));
+            return book;
         }
     }
 
