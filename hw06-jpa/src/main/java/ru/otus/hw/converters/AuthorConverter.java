@@ -6,12 +6,9 @@ import ru.otus.hw.dto.AuthorDTO;
 
 @Component
 public class AuthorConverter {
-    public String authorToString(Author author) {
-        return "Id: %d, FullName: %s".formatted(author.getId(), author.getFullName());
-    }
 
-    public String authorToString(AuthorDTO author) {
-        return "Id: %d, FullName: %s".formatted(author.getId(), author.getFullName());
+    public String authorDtoToString(AuthorDTO authorDto) {
+        return "Id: %d, FullName: %s".formatted(authorDto.getId(), authorDto.getFullName());
     }
 
     public AuthorDTO toDto(Author author) {

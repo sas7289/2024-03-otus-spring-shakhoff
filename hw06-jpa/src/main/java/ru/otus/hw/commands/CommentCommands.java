@@ -24,14 +24,14 @@ public class CommentCommands {
     @ShellMethod(value = "Find comment by id", key = "cbid")
     public String findById(long id) {
         return commentService.findById(id)
-                .map(commentConverter::toString)
+                .map(commentConverter::commentDtotoString)
                 .orElse("Comment with id %d not found".formatted(id));
     }
 
     @ShellMethod(value = "Find comments by book id", key = "cbbid")
     public String findByBookId(long bookId) {
         return commentService.findByBookId(bookId).stream()
-            .map(commentConverter::toString)
+            .map(commentConverter::commentDtotoString)
             .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
@@ -39,14 +39,14 @@ public class CommentCommands {
     @ShellMethod(value = "Insert comment", key = "cins")
     public String insertComment(String content, long bookId) {
         var savedComment = commentService.insert(content, bookId, LocalDateTime.now(Clock.systemUTC()));
-        return commentConverter.toString(savedComment);
+        return commentConverter.commentDtotoString(savedComment);
     }
 
     // cupd 4 editedComment 3 "Content" 5
     @ShellMethod(value = "Update comment", key = "cupd")
     public String updateBook(long id, String content, long bookId) {
         var updatedComment = commentService.update(id, content, bookId);
-        return commentConverter.toString(updatedComment);
+        return commentConverter.commentDtotoString(updatedComment);
     }
 
     // cdel 4

@@ -21,36 +21,19 @@ public class BookConverter {
 
     private final CommentConverter commentConverter;
 
-    public String bookToString(Book book) {
-        var genresString = book.getGenres().stream()
-            .map(genreConverter::genreToString)
+    public String bookDtoToString(BookDTO bookDto) {
+        var genresString = bookDto.getGenres().stream()
+            .map(genreConverter::genreDtoToString)
             .map("{%s}"::formatted)
             .collect(Collectors.joining(", "));
 
-        var commetsString = book.getComments().stream()
-            .map(commentConverter::toString)
+        var commetsString = bookDto.getComments().stream()
+            .map(commentConverter::commentDtotoString)
             .collect(Collectors.joining(", "));
         return "Id: %d, title: %s, author: {%s}, genres: [%s], comments: [%s]".formatted(
-            book.getId(),
-            book.getTitle(),
-            authorConverter.authorToString(book.getAuthor()),
-            genresString,
-            commetsString);
-    }
-
-    public String bookToString(BookDTO book) {
-        var genresString = book.getGenres().stream()
-            .map(genreConverter::genreToString)
-            .map("{%s}"::formatted)
-            .collect(Collectors.joining(", "));
-
-        var commetsString = book.getComments().stream()
-            .map(commentConverter::toString)
-            .collect(Collectors.joining(", "));
-        return "Id: %d, title: %s, author: {%s}, genres: [%s], comments: [%s]".formatted(
-            book.getId(),
-            book.getTitle(),
-            authorConverter.authorToString(book.getAuthor()),
+            bookDto.getId(),
+            bookDto.getTitle(),
+            authorConverter.authorDtoToString(bookDto.getAuthor()),
             genresString,
             commetsString);
     }

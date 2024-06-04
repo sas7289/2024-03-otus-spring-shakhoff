@@ -32,7 +32,7 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "books")
 @NamedEntityGraph(name = "authors-entity-graph",
-attributeNodes = {@NamedAttributeNode("author")})
+    attributeNodes = {@NamedAttributeNode("author")})
 public class Book {
 
     @Id
@@ -44,7 +44,7 @@ public class Book {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private Author author;
 
@@ -55,6 +55,8 @@ public class Book {
     @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 5)
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)

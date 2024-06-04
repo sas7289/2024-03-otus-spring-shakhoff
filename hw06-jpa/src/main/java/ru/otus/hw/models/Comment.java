@@ -19,8 +19,6 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Entity
 @Table(name = "comments")
 public class Comment {
