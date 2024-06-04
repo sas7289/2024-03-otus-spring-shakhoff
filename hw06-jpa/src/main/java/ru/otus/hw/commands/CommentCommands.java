@@ -35,14 +35,14 @@ public class CommentCommands {
             .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
-    // bins newBook 1 1,6
+    // cins newComment 1 1,6
     @ShellMethod(value = "Insert comment", key = "cins")
     public String insertComment(String content, long bookId) {
         var savedComment = commentService.insert(content, bookId, LocalDateTime.now(Clock.systemUTC()));
         return commentConverter.toString(savedComment);
     }
 
-    // bupd 4 editedBook 3 2,5
+    // cupd 4 editedComment 3 "Content" 5
     @ShellMethod(value = "Update comment", key = "cupd")
     public String updateBook(long id, String content, long bookId) {
         var updatedComment = commentService.update(id, content, bookId);
