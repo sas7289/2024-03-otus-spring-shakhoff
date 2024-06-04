@@ -1,6 +1,7 @@
 package ru.otus.hw.repositories;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -179,12 +180,9 @@ public class JdbcBookRepository implements BookRepository {
             Book book = null;
             List<Genre> genres = new ArrayList<>();
 
-            boolean isFirstRow = true;
-
             while (rs.next()) {
-                if (isFirstRow) {
+                if (Objects.isNull(book)) {
                     book = initBook(rs, genres);
-                    isFirstRow = false;
                 }
                 long genreId = rs.getLong("genre_id");
                 String genreName = rs.getString("genre_name");
