@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Genre;
 
-@JdbcTest
-@Import(JdbcGenreRepository.class)
+@DataJpaTest
+@Import(JpaGenreRepository.class)
 class JdbcGenreRepositoryTest {
 
     @Autowired
@@ -55,5 +54,4 @@ class JdbcGenreRepositoryTest {
             .map(index -> new Genre(index, genreNameTemplate + index))
             .collect(Collectors.toList());
     }
-
 }
