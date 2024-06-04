@@ -10,10 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.dto.CommentDTO;
 import ru.otus.hw.exceptions.EntityNotFoundException;
-import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 
@@ -27,8 +25,6 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentConverter commentConverter;
 
-    private final AuthorRepository authorRepository;
-
     @Override
     @Transactional(readOnly = true)
     public Optional<CommentDTO> findById(long id) {
@@ -40,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentDTO insert(String content, long bookId, LocalDateTime createdDate) {
         Book book = bookRepository.findById(bookId)
-            .orElseThrow(() -> new EntityNotFoundException("ALARM!!!"));
+            .orElseThrow(() -> new EntityNotFoundException("Book not found by id: " + bookId));
         Comment comment = new Comment(0, content, createdDate, createdDate, book);
         comment = commentRepository.save(comment);
         return commentConverter.toDto(comment);
@@ -48,11 +44,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDTO update(long id, String content, long bookId) {
+    public CommentDTO update(long commentId, String content, long bookId) {
         Book book = bookRepository.findById(bookId)
-            .orElseThrow(() -> new EntityNotFoundException("ALARM!!!"));
-        Comment comment = commentRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("ALARM!!!"));
+            .orElseThrow(() -> new EntityNotFoundException("Book not found by id: " + bookId));
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new EntityNotFoundException("Comment not found by id: " + commentId));
         comment.setUpdatedDate(LocalDateTime.now(Clock.systemUTC()));
         comment.setBook(book);
         comment.setContent(content);
