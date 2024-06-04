@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -54,6 +55,8 @@ public class Book {
     @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 5)
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Comment> comments;
 }

@@ -59,7 +59,6 @@ class BookServiceImplTest {
         var expectedBooks = getDbBooks();
 
         assertThat(actualBooks).containsExactlyElementsOf(expectedBooks);
-        actualBooks.forEach(System.out::println);
     }
 
     @DisplayName("должен загружать книгу по id")
