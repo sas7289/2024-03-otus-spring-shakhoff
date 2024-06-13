@@ -13,12 +13,16 @@ public class CommentConverter {
 
 
     public String commentDtotoString(CommentDTO comment) {
-        return "Id: %d, Content: %s, Created date: %s, Updated date: %s, Related book: {id: %s, title: %s}".formatted(comment.getId(), comment.getContent(), comment.getCreatedDate(), comment.getUpdatedDate(), comment.getBaseBook().getId(), comment.getBaseBook().getTitle());
+        return "Id: %d, Content: %s, Created date: %s, Updated date: %s, Related book: {id: %s, title: %s}"
+            .formatted(comment.getId(), comment.getContent(), comment.getCreatedDate(),
+                comment.getUpdatedDate(), comment.getBaseBook().getId(), comment.getBaseBook().getTitle());
     }
 
     public CommentDTO toDto(Comment comment) {
-        AuthorDTO authorDTO = new AuthorDTO(comment.getBook().getAuthor().getId(), comment.getBook().getAuthor().getFullName());
+        AuthorDTO authorDTO = new AuthorDTO(comment.getBook().getAuthor().getId(),
+            comment.getBook().getAuthor().getFullName());
         BaseBookDTO baseBookDTO = new BaseBookDTO(comment.getBook().getId(), comment.getBook().getTitle(), authorDTO);
-        return new CommentDTO(comment.getId(), comment.getContent(), comment.getCreatedDate(), comment.getUpdatedDate(), baseBookDTO);
+        return new CommentDTO(comment.getId(), comment.getContent(), comment.getCreatedDate(), comment.getUpdatedDate(),
+            baseBookDTO);
     }
 }

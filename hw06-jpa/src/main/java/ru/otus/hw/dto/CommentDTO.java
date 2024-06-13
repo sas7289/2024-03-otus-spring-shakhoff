@@ -3,7 +3,6 @@ package ru.otus.hw.dto;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.otus.hw.models.Book;
 
 @Data
 @AllArgsConstructor

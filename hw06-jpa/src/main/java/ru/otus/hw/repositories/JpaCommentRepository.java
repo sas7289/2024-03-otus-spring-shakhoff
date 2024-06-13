@@ -43,7 +43,8 @@ public class JpaCommentRepository implements CommentRepository {
     @Override
     public List<Comment> findByBookId(long bookId) {
         //TODO подумать надо передачей EntityGraph в findById
-        TypedQuery<Comment> query = entityManager.createQuery("select c from Comment c where c.book.id = :bookId", Comment.class);
+        TypedQuery<Comment> query = entityManager
+            .createQuery("select c from Comment c where c.book.id = :bookId", Comment.class);
         query.setParameter("bookId", bookId);
         return query.getResultList();
     }
