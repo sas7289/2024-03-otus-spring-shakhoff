@@ -15,35 +15,16 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.hw.converters.AuthorConverter;
-import ru.otus.hw.converters.BookConverter;
-import ru.otus.hw.converters.CommentConverter;
-import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.dto.AuthorDTO;
 import ru.otus.hw.dto.BaseBookDTO;
 import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.dto.CommentDTO;
 import ru.otus.hw.dto.GenreDTO;
-import ru.otus.hw.repositories.JpaAuthorRepository;
-import ru.otus.hw.repositories.JpaBookRepository;
-import ru.otus.hw.repositories.JpaCommentRepository;
-import ru.otus.hw.repositories.JpaGenreRepository;
 
-@DataJpaTest
-@Import({BookServiceImpl.class,
-    JpaBookRepository.class,
-    JpaGenreRepository.class,
-    JpaAuthorRepository.class,
-    JpaCommentRepository.class,
-    BookConverter.class,
-    GenreConverter.class,
-    CommentConverter.class,
-    AuthorConverter.class
-})
+@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
 @Transactional(propagation = Propagation.NEVER)
 @TestMethodOrder(OrderAnnotation.class)
 class BookServiceImplTest {

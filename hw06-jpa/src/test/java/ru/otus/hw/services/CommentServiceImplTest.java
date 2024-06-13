@@ -8,20 +8,12 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import ru.otus.hw.converters.CommentConverter;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.hw.dto.AuthorDTO;
 import ru.otus.hw.dto.BaseBookDTO;
 import ru.otus.hw.dto.CommentDTO;
-import ru.otus.hw.repositories.JpaBookRepository;
-import ru.otus.hw.repositories.JpaCommentRepository;
 
-@DataJpaTest
-@Import({CommentServiceImpl.class,
-JpaCommentRepository.class,
-JpaBookRepository.class,
-CommentConverter.class})
+@SpringBootTest
 class CommentServiceImplTest {
 
     @Autowired
