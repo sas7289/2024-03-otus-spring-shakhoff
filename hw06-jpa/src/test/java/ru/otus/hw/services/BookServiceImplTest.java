@@ -24,7 +24,7 @@ import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.dto.CommentDTO;
 import ru.otus.hw.dto.GenreDTO;
 
-@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
+@SpringBootTest
 @Transactional(propagation = Propagation.NEVER)
 @TestMethodOrder(OrderAnnotation.class)
 class BookServiceImplTest {
