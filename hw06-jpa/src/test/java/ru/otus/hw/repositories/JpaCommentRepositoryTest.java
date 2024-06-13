@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -37,6 +38,7 @@ class JpaCommentRepositoryTest {
 
     @ParameterizedTest()
     @MethodSource("getDbComments")
+    @DisplayName("должен загружать комментарий по id")
     void shouldReturnCorrectCommentById(CommentDTO expectedCommentDto) {
         Optional<CommentDTO> actualCommentDto = commentRepository.findById(expectedCommentDto.getId())
             .map(commentConverter::toDto);
@@ -48,6 +50,7 @@ class JpaCommentRepositoryTest {
     }
 
     @Test
+    @DisplayName("должен загружать комментарий по id книги")
     void shouldReturnCorrectCommentListByBookId() {
         long bookId = 1;
         List<CommentDTO> actualCommentDtos = commentRepository.findByBookId(bookId).stream()
@@ -58,6 +61,7 @@ class JpaCommentRepositoryTest {
     }
 
     @Test
+    @DisplayName("должен сохранять новый комментарий")
     void shouldSaveNewComment() {
         Book book = testEntityManager.find(Book.class, 1);
         Comment newComment = new Comment(0, "Content_1", LocalDateTime.parse("2024-05-01T13:01:15"), LocalDateTime.parse("2024-05-01T13:01:15"),
@@ -76,6 +80,7 @@ class JpaCommentRepositoryTest {
     }
 
     @Test
+    @DisplayName("должен сохранять изменённый комментарий")
     void shouldSaveUpdatedComment() {
         Book book = testEntityManager.find(Book.class, 1);
         Comment expectedComment = new Comment(1, "Content_1", LocalDateTime.parse("2024-05-01T13:01:15"), LocalDateTime.parse("2024-05-01T13:01:15"),
