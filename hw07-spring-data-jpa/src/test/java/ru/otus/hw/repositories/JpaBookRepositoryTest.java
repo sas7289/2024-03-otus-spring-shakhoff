@@ -29,8 +29,7 @@ import ru.otus.hw.models.Genre;
 
 @DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
 @DataJpaTest
-@Import({JpaBookRepository.class,
-    JpaGenreRepository.class,
+@Import({
     BookConverter.class,
     AuthorConverter.class,
     GenreConverter.class,
@@ -122,7 +121,7 @@ class JpaBookRepositoryTest {
     void shouldDeleteBook() {
         assertThat(testEntityManager.find(Book.class, 1)).isNotNull();
         repositoryJdbc.deleteById(1L);
-        testEntityManager.clear();
+        testEntityManager.flush();
         assertThat(testEntityManager.find(Book.class, 1)).isNull();
     }
 

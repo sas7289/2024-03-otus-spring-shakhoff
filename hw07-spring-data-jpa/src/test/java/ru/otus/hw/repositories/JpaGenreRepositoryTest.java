@@ -10,11 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Genre;
 
 @DataJpaTest
-@Import(JpaGenreRepository.class)
 class JpaGenreRepositoryTest {
 
     @Autowired
@@ -34,7 +32,7 @@ class JpaGenreRepositoryTest {
     @DisplayName("должен находить жанры по нескольким ID")
     void shouldReturnCorrectGenreListByIDs() {
         Set<Long> genreIDs = Set.of(1L, 3L, 5L);
-        List<Genre> foundGenres = genreRepository.findAllByIds(Set.of(1L, 3L, 5L));
+        List<Genre> foundGenres = genreRepository.findAllByIdIn(Set.of(1L, 3L, 5L));
 
         List<Genre> expectedGenres = prepareGenresByIDs(genreIDs);
 
