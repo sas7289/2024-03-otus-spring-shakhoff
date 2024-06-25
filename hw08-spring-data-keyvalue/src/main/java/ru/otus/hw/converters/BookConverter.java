@@ -30,7 +30,7 @@ public class BookConverter {
         var commetsString = bookDto.getComments().stream()
             .map(commentConverter::commentDtotoString)
             .collect(Collectors.joining(", "));
-        return "Id: %d, title: %s, author: {%s}, genres: [%s], comments: [%s]".formatted(
+        return "Id: %s, title: %s, author: {%s}, genres: [%s], comments: [%s]".formatted(
             bookDto.getId(),
             bookDto.getTitle(),
             authorConverter.authorDtoToString(bookDto.getAuthor()),

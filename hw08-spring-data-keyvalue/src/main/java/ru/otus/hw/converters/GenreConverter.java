@@ -8,7 +8,7 @@ import ru.otus.hw.dto.GenreDTO;
 public class GenreConverter {
 
     public String genreDtoToString(GenreDTO genre) {
-        return "Id: %d, Name: %s".formatted(genre.getId(), genre.getName());
+        return "Id: %s, Name: %s".formatted(genre.getId(), genre.getName());
     }
 
     public GenreDTO toDto(Genre genre) {

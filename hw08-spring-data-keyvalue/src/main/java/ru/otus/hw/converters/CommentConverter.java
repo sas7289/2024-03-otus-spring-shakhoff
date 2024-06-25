@@ -13,7 +13,7 @@ public class CommentConverter {
 
 
     public String commentDtotoString(CommentDTO comment) {
-        return "Id: %d, Content: %s, Created date: %s, Updated date: %s, Related book: {id: %s, title: %s}"
+        return "Id: %s, Content: %s, Created date: %s, Updated date: %s, Related book: {id: %s, title: %s}"
             .formatted(comment.getId(), comment.getContent(), comment.getCreatedDate(),
                 comment.getUpdatedDate(), comment.getBaseBook().getId(), comment.getBaseBook().getTitle());
     }
