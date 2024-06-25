@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class BaseCommentDTO {
 
-    private long id;
+    private String id;
 
     private String content;
 

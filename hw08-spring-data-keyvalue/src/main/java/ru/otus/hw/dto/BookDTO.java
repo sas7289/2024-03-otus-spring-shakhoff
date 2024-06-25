@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class BookDTO {
 
-    private long id;
+    private String id;
 
     private String title;
 

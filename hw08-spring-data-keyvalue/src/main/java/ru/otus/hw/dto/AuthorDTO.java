@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class AuthorDTO {
 
-    private long id;
+    private String id;
 
     private String fullName;
 }
