@@ -1,16 +1,11 @@
 package ru.otus.hw.repositories;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.hw.models.Comment;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends MongoRepository<Comment, String> {
 
-    Optional<Comment> findById(long id);
-
-    void deleteById(long id);
-
-    List<Comment> findByBookId(long bookId);
+    List<Comment> findByBookId(String bookId);
 }
