@@ -9,17 +9,17 @@ import ru.otus.hw.dto.CommentDTO;
 public interface CommentService {
 
     @Transactional
-    Optional<CommentDTO> findById(long id);
+    Optional<CommentDTO> findById(String id);
 
     @Transactional
-    CommentDTO insert(String content, long bookId, LocalDateTime createdDate);
+    CommentDTO insert(String content, String bookId, LocalDateTime createdDate);
 
     @Transactional
-    CommentDTO update(long id, String content, long bookId);
+    CommentDTO update(String id, String content, String bookId);
 
     @Transactional
-    void deleteById(long id);
+    void deleteById(String id);
 
     @Transactional(readOnly = true)
-    List<CommentDTO> findByBookId(long bookId);
+    List<CommentDTO> findByBookId(String bookId);
 }

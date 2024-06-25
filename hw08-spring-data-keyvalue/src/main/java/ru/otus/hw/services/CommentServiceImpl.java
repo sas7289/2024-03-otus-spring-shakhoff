@@ -27,24 +27,26 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<CommentDTO> findById(long id) {
+    public Optional<CommentDTO> findById(String id) {
         return commentRepository.findById(id)
             .map(commentConverter::toDto);
     }
 
     @Override
     @Transactional
-    public CommentDTO insert(String content, long bookId, LocalDateTime createdDate) {
+    public CommentDTO insert(String content, String bookId, LocalDateTime createdDate) {
         Book book = bookRepository.findById(bookId)
             .orElseThrow(() -> new EntityNotFoundException("Book not found by id: " + bookId));
-        Comment comment = new Comment(0, content, createdDate, createdDate, book);
+        Comment comment = new Comment(null, content, createdDate, createdDate, book);
         comment = commentRepository.save(comment);
+        book.getComments().add(comment);
+        bookRepository.save(book);
         return commentConverter.toDto(comment);
     }
 
     @Override
     @Transactional
-    public CommentDTO update(long commentId, String content, long bookId) {
+    public CommentDTO update(String commentId, String content, String bookId) {
         Book book = bookRepository.findById(bookId)
             .orElseThrow(() -> new EntityNotFoundException("Book not found by id: " + bookId));
         Comment comment = commentRepository.findById(commentId)
@@ -57,13 +59,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         commentRepository.deleteById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDTO> findByBookId(long bookId) {
+    public List<CommentDTO> findByBookId(String bookId) {
         return commentRepository.findByBookId(bookId).stream()
             .map(commentConverter::toDto)
             .toList();

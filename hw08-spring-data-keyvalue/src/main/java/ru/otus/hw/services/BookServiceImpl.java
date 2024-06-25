@@ -36,7 +36,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookDTO> findById(long id) {
+    public Optional<BookDTO> findById(String id) {
         return bookRepository.findById(id).map(bookConverter::toDto);
     }
 
@@ -49,31 +49,31 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDTO insert(String title, long authorId, Set<Long> genresIds) {
-        Book savedBook = save(0, title, authorId, genresIds);
+    public BookDTO insert(String title, String authorId, Set<String> genresIds) {
+        Book savedBook = save(null, title, authorId, genresIds);
         return bookConverter.toDto(savedBook);
     }
 
     @Override
     @Transactional
-    public BookDTO update(long id, String title, long authorId, Set<Long> genresIds) {
+    public BookDTO update(String id, String title, String authorId, Set<String> genresIds) {
         Book updatedBook = save(id, title, authorId, genresIds);
         return bookConverter.toDto(updatedBook);
     }
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         bookRepository.deleteById(id);
     }
 
-    private Book save(long id, String title, long authorId, Set<Long> genresIds) {
+    private Book save(String id, String title, String authorId, Set<String> genresIds) {
         if (isEmpty(genresIds)) {
             throw new IllegalArgumentException("Genres ids must not be null");
         }
 
         var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+                .orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
         var genres = genreRepository.findAllByIdIn(genresIds);
         if (isEmpty(genres) || genresIds.size() != genres.size()) {
             throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresIds));
