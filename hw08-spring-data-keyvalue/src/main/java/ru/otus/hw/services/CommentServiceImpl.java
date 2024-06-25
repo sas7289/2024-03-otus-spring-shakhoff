@@ -61,6 +61,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void deleteById(String id) {
         commentRepository.deleteById(id);
+        commentRepository.removeCommentArrayElementById(id);
     }
 
     @Override

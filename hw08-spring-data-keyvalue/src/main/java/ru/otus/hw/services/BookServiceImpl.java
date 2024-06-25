@@ -23,6 +23,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
+
     private final AuthorRepository authorRepository;
 
     private final GenreRepository genreRepository;
@@ -64,6 +65,9 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteById(String id) {
+        commentRepository.findByBookId(id).stream()
+            .map(Comment::getId)
+            .forEach(commentRepository::deleteById);
         bookRepository.deleteById(id);
     }
 
@@ -73,7 +77,7 @@ public class BookServiceImpl implements BookService {
         }
 
         var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
+            .orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
         var genres = genreRepository.findAllByIdIn(genresIds);
         if (isEmpty(genres) || genresIds.size() != genres.size()) {
             throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresIds));
