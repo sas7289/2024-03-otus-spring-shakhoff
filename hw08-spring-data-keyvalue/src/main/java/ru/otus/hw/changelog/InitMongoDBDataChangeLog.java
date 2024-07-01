@@ -1,26 +1,23 @@
 package ru.otus.hw.changelog;
 
+import com.github.cloudyrock.mongock.ChangeLog;
+import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
-import io.mongock.api.annotations.BeforeExecution;
-import io.mongock.api.annotations.ChangeUnit;
-import io.mongock.api.annotations.Execution;
-import io.mongock.api.annotations.RollbackBeforeExecution;
-import io.mongock.api.annotations.RollbackExecution;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
-@ChangeUnit(order = "001", id = "dropDB", author = "sharkVale", runAlways = true)
+@ChangeLog(order = "000")
 public class InitMongoDBDataChangeLog {
 
 
-    @BeforeExecution
+    @ChangeSet(order = "001", id = "dropDB", author = "sharkVale", runAlways = true)
     public void dropDb(MongoDatabase database) {
         database.drop();
     }
 
-    @Execution
+    @ChangeSet(order = "002", id = "initData", author = "sharkVale", runAlways = true)
     public void migrate(AuthorRepository authorRepository, GenreRepository genreRepository) {
         initAuthors(authorRepository);
         initGenres(genreRepository);
@@ -39,15 +36,5 @@ public class InitMongoDBDataChangeLog {
         genreRepository.save(new Genre(null, "Genre_4"));
         genreRepository.save(new Genre(null, "Genre_5"));
         genreRepository.save(new Genre(null, "Genre_6"));
-    }
-
-    @RollbackBeforeExecution
-    public void rollbackBE() {
-
-    }
-
-    @RollbackExecution
-    public void rollback() {
-
     }
 }
