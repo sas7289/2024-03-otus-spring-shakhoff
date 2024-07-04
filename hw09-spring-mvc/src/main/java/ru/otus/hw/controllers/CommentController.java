@@ -16,7 +16,9 @@ public class CommentController {
     private final CommentServiceImpl commentService;
 
     @PostMapping("/comment")
-    public String insertComment(@RequestParam String content, @RequestParam long bookId, RedirectAttributes redirectAttributes) {
+    public String insertComment(@RequestParam String content,
+                                @RequestParam long bookId,
+                                RedirectAttributes redirectAttributes) {
         var savedComment = commentService.insert(content, bookId, LocalDateTime.now(Clock.systemUTC()));
         redirectAttributes.addAttribute("id", bookId);
         return "redirect:books/{id}";

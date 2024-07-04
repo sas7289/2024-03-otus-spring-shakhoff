@@ -66,7 +66,10 @@ public class BookController {
     }
 
     @PostMapping("/books/update")
-    public String updateBook(@RequestParam long id, @RequestParam String title, @RequestParam long authorId, @RequestParam Set<Long> genresIds) {
+    public String updateBook(@RequestParam long id,
+                             @RequestParam String title,
+                             @RequestParam long authorId,
+                             @RequestParam Set<Long> genresIds) {
         var savedBook = bookService.update(id, title, authorId, genresIds);
         return "redirect:/books";
     }
