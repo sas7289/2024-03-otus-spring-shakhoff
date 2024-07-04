@@ -20,11 +20,14 @@
     .row {
       margin-top: 10px;
     }
+
+    table, th, td {
+      border: 1px solid black;
+    }
   </style>
 </head>
 <body>
-<!-- Person edition -->
-<form id="edit-form" action="edit.html" th:method="post" th:action="@{/comment}">
+<form id="book-form" action="book.html" th:method="post" th:action="@{/comment}">
   <h3>Book Info:</h3>
   <table>
     <tr>
@@ -36,33 +39,43 @@
       <td id="title" th:value="${book.getTitle()}" th:text="${book.getTitle()}"></td>
     </tr>
 
-    <tr>
+    <tr class="row">
       <td><label for="author">Author:</label></td>
       <td id="author" th:value="${book.getAuthor().getFullName()}" th:text="${book.getAuthor().getFullName()}"></td>
     </tr>
 
-    <tr>
+    <tr class="row">
       <td><label for="genres">Genres:</label></td>
-      <td id="genres" th:each="genre: ${book.getGenres()}" th:value="${genre.getId()}" th:text="${genre.getName()}">
-    </tr>
-
-    <tr>
       <td>
-        <label for="input-comment">Add comment</label>
-        <input id="input-comment" th:name="content">
+        <p id="genres" th:each="genre: ${book.getGenres()}" th:value="${genre.getId()}" th:text="${genre.getName()}"></p>
       </td>
     </tr>
 
 
-    <tr th:each="comment: ${book.getComments()}">
-      <td th:text="${comment.getContent()}"></td>
-    </tr>
   </table>
 
 
-  <div class="row">
-    <button type="submit">Save comment</button>
-  </div>
+  <table>
+    <tr class="row">
+      <td colspan="2">
+        <label for="input-comment">Add comment</label>
+        <input id="input-comment" th:name="content">
+      </td>
+    </tr>
+    <tr class="row" colspan="2">
+      <td>
+        <button type="submit">Save comment</button>
+      </td>
+    </tr>
+    <tr class="row">
+      <td colspan="2" th:if="${!book.getComments().isEmpty()}" th:text="Comments">
+      </td>
+    </tr>
+    <tr class="row" th:each="comment: ${book.getComments()}">
+      <td th:text="${comment.getContent()}"></td>
+      <td th:text="${#temporals.format(comment.getCreatedDate(), 'dd-MM-yyyy HH:mm')}"></td>
+    </tr>
+  </table>
 </form>
 
 </body>
