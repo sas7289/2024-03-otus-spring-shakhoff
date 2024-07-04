@@ -1,4 +1,4 @@
-package ru.otus.hw.commands;
+package ru.otus.hw.controllers;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.dto.AuthorDTO;
 import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.dto.GenreDTO;
@@ -28,8 +27,6 @@ public class BookController {
 
     private final GenreService genreService;
 
-    private final BookConverter bookConverter;
-
     @GetMapping("/books")
     public String findAllBooks(Model model) {
         List<BookDTO> books = bookService.findAll();
@@ -38,7 +35,7 @@ public class BookController {
         model.addAttribute("books", books);
         model.addAttribute("authors", authors);
         model.addAttribute("genres", genres);
-        return "list";
+        return "book-list";
     }
 
     @GetMapping("/books/{id}")
@@ -71,7 +68,7 @@ public class BookController {
     @PostMapping("/books/update")
     public String updateBook(@RequestParam long id, @RequestParam String title, @RequestParam long authorId, @RequestParam Set<Long> genresIds) {
         var savedBook = bookService.update(id, title, authorId, genresIds);
-        return bookConverter.bookDtoToString(savedBook);
+        return "redirect:/books";
     }
 
     @GetMapping("books/delete/{id}")
