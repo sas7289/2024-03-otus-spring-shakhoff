@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>List of all persons</title>
+  <style type="text/css">
+    body {
+      padding: 50px;
+    }
+
+    .books {
+      border: 1px solid steelblue;
+      width: 300px;
+      border-collapse: collapse;
+    }
+
+    .books tr td, th {
+      padding: 5px;
+      border: 1px solid steelblue;
+    }
+
+    .books td:last-child, td:first-child {
+      width: 50px;
+    }
+  </style>
+</head>
+<body>
+<h3 th:if="${!books.isEmpty()}">Books:</h3>
+
+<table th:if="${!books.isEmpty()}" class="books">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th colspan="3">Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="book : ${books}">
+    <td th:text="${book.id}">1</td>
+    <td th:text="${book.title}">John Doe</td>
+    <td>
+      <a href="book.html" th:href="@{/books/edit/{id}(id=${book.id})}">Edit</a>
+    </td>
+    <td>
+      <a href="book-list.html" th:href="@{/books/delete/{id}(id=${book.id})}">Delete</a>
+    </td>
+    <td>
+      <a href="book.html" th:href="@{/books/{id}(id=${book.id})}">Open</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<form id="create-form" th:method="post" th:action="@{/books}">
+  <h3>Add book:</h3>
+
+  <div class="row">
+    <label for="title">Book's title:</label>
+    <input id="title" type="text" th:name="title"/>
+  </div>
+
+  <div>
+    <label for="authors">Author</label>
+    <select id="authors" name="authorId">
+      <option th:each="author: ${authors}" th:value="${author.getId()}" th:text="${author.getFullName()}"></option>
+    </select>
+  </div>
+
+  <div>
+      <td th:each="genre: ${genres}">
+        <input name="genresIds"  type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">
+      </td>
+
+  </div>
+
+  <div class="row">
+    <button type="submit">Save</button>
+  </div>
+</form>
+</body>
+</html>
