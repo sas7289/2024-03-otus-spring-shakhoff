@@ -1,4 +1,4 @@
-package ru.otus.hw.controllers;
+package ru.otus.hw.rest;
 
 import java.time.Clock;
 import java.time.LocalDateTime;

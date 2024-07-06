@@ -1,6 +1,7 @@
-package ru.otus.hw.controllers;
+package ru.otus.hw.page;
 
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +14,11 @@ import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.dto.GenreDTO;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
-
-import java.util.Set;
 import ru.otus.hw.services.GenreService;
 
 @RequiredArgsConstructor
 @Controller
-public class BookController {
+public class BookPagesController {
 
     private final BookService bookService;
 
