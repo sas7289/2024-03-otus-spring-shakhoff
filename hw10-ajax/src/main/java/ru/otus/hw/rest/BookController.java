@@ -28,7 +28,13 @@ public class BookController {
 
     private final GenreService genreService;
 
-
+    @GetMapping("/books")
+    public List<BookDTO> findAllBooks(Model model) {
+        List<BookDTO> books = bookService.findAll();
+        List<AuthorDTO> authors = authorService.findAll();
+        List<GenreDTO> genres = genreService.findAll();
+        return books;
+    }
 
     @GetMapping("/books/{id}")
     public BookDTO findBookById(@PathVariable("id") long id, Model model) {

@@ -23,60 +23,98 @@
       width: 50px;
     }
   </style>
+<!--  <script>-->
+<!--    function load() {-->
+<!--      fetch("/books")-->
+<!--              .then(function (books) {-->
+<!--                let parse = JSON.parse(books);-->
+<!--                parse.forEach(book => {-->
+<!--                  let title = book.title;-->
+<!--                  document.body += `<tr>-->
+<!--        <td>${book.title}</td>-->
+<!--        <td>${book.id}</td>-->
+<!--      </tr>;`-->
+<!--                })-->
+<!--              })-->
+<!--    }-->
+<!--  </script>-->
 </head>
-<body>
-<h3 th:if="${!books.isEmpty()}">Books:</h3>
+<body onload="load()">
+<script>
+  function load() {
+    fetch("/books")
+            .then(response => {
+              console.log(response.body)
+            } )
+      //       function (books) {
+      //         console.log(books.json())
+      //         let parse = JSON.parse(books);
+      //         parse.forEach(book => {
+      //           let title = book.title;
+      //           let htmlParagraphElement = document.createElement("p");
+      //           htmlParagraphElement.innerText = "TEXT";
+      //           let p = document.body.appendChild(htmlParagraphElement);
+      // //           document.body += `<tr>
+      // //   <td>${book.title}</td>
+      // //   <td>${book.id}</td>
+      // // </tr>;`
+      //         })
+      //       })
+  }
+</script>
 
-<table th:if="${!books.isEmpty()}" class="books">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th colspan="3">Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="book : ${books}">
-    <td th:text="${book.id}">1</td>
-    <td th:text="${book.title}">John Doe</td>
-    <td>
-      <a href="book.html" th:href="@{/books/edit/{id}(id=${book.id})}">Edit</a>
-    </td>
-    <td>
-      <a href="book-list.html" th:href="@{/books/delete/{id}(id=${book.id})}">Delete</a>
-    </td>
-    <td>
-      <a href="book.html" th:href="@{/books/{id}(id=${book.id})}">Open</a>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<!--<h3 th:if="${!books.isEmpty()}">Books:</h3>-->
 
-<form id="create-form" th:method="post" th:action="@{/books}">
-  <h3>Add book:</h3>
+<!--<table th:if="${!books.isEmpty()}" class="books">-->
+<!--  <thead>-->
+<!--  <tr>-->
+<!--    <th>ID</th>-->
+<!--    <th>Name</th>-->
+<!--    <th colspan="3">Actions</th>-->
+<!--  </tr>-->
+<!--  </thead>-->
+<!--  <tbody>-->
+<!--  <tr th:each="book : ${books}">-->
+<!--    <td th:text="${book.id}">1</td>-->
+<!--    <td th:text="${book.title}">John Doe</td>-->
+<!--    <td>-->
+<!--      <a href="book.html" th:href="@{/books/edit/{id}(id=${book.id})}">Edit</a>-->
+<!--    </td>-->
+<!--    <td>-->
+<!--      <a href="book-list.html" th:href="@{/books/delete/{id}(id=${book.id})}">Delete</a>-->
+<!--    </td>-->
+<!--    <td>-->
+<!--      <a href="book.html" th:href="@{/books/{id}(id=${book.id})}">Open</a>-->
+<!--    </td>-->
+<!--  </tr>-->
+<!--  </tbody>-->
+<!--</table>-->
 
-  <div class="row">
-    <label for="title">Book's title:</label>
-    <input id="title" type="text" th:name="title"/>
-  </div>
+<!--<form id="create-form" th:method="post" th:action="@{/books}">-->
+<!--  <h3>Add book:</h3>-->
 
-  <div>
-    <label for="authors">Author</label>
-    <select id="authors" name="authorId">
-      <option th:each="author: ${authors}" th:value="${author.getId()}" th:text="${author.getFullName()}"></option>
-    </select>
-  </div>
+<!--  <div class="row">-->
+<!--    <label for="title">Book's title:</label>-->
+<!--    <input id="title" type="text" th:name="title"/>-->
+<!--  </div>-->
 
-  <div>
-      <td th:each="genre: ${genres}">
-        <input name="genresIds"  type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">
-      </td>
+<!--  <div>-->
+<!--    <label for="authors">Author</label>-->
+<!--    <select id="authors" name="authorId">-->
+<!--      <option th:each="author: ${authors}" th:value="${author.getId()}" th:text="${author.getFullName()}"></option>-->
+<!--    </select>-->
+<!--  </div>-->
 
-  </div>
+<!--  <div>-->
+<!--      <td th:each="genre: ${genres}">-->
+<!--        <input name="genresIds"  type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">-->
+<!--      </td>-->
 
-  <div class="row">
-    <button type="submit">Save</button>
-  </div>
-</form>
+<!--  </div>-->
+
+<!--  <div class="row">-->
+<!--    <button type="submit">Save</button>-->
+<!--  </div>-->
+<!--</form>-->
 </body>
 </html>
