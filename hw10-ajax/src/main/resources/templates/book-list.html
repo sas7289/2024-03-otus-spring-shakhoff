@@ -23,44 +23,74 @@
       width: 50px;
     }
   </style>
-<!--  <script>-->
-<!--    function load() {-->
-<!--      fetch("/books")-->
-<!--              .then(function (books) {-->
-<!--                let parse = JSON.parse(books);-->
-<!--                parse.forEach(book => {-->
-<!--                  let title = book.title;-->
-<!--                  document.body += `<tr>-->
-<!--        <td>${book.title}</td>-->
-<!--        <td>${book.id}</td>-->
-<!--      </tr>;`-->
-<!--                })-->
-<!--              })-->
-<!--    }-->
-<!--  </script>-->
+  <script>
+    function findBookById(bookId) {
+      fetch(`/books/${bookId}`)
+      .then(response => response.json())
+      .then(book => {
+        document.body.innerHTML = "";
+        document.body.innerHTML += `
+        <table>
+          <tbody>
+            <tr>
+              <td>${book.id}</td>
+              <td>${book.title}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button onclick=findAllBooks()>Back</button>
+        `
+      })
+    }
+
+    function deleteBookById(bookId) {
+      fetch(`/books/delete/${bookId}`)
+      .then(response => {
+        if (response.ok) {
+          findAllBooks();
+        } else {
+          document.body.innerText = "ALARM!!!";
+        }
+      })
+    }
+  </script>
 </head>
-<body onload="load()">
+<body onload="findAllBooks()">
 <script>
-  function load() {
+  function findAllBooks() {
     fetch("/books")
-            .then(response => {
-              console.log(response.body)
-            } )
-      //       function (books) {
-      //         console.log(books.json())
-      //         let parse = JSON.parse(books);
-      //         parse.forEach(book => {
-      //           let title = book.title;
-      //           let htmlParagraphElement = document.createElement("p");
-      //           htmlParagraphElement.innerText = "TEXT";
-      //           let p = document.body.appendChild(htmlParagraphElement);
-      // //           document.body += `<tr>
-      // //   <td>${book.title}</td>
-      // //   <td>${book.id}</td>
-      // // </tr>;`
-      //         })
-      //       })
+    .then(response =>
+        response.json()
+    )
+    .then(json => {
+      document.body.innerHTML = "";
+      console.log("-------")
+      document.body.innerHTML += `
+          <table>
+            <tbody id="t"></tbody>
+          </table>
+`
+      let tBody = document.getElementById("t");
+      json.forEach(book => {
+        console.log(book.title)
+
+        tBody.innerHTML += `
+            <tr>
+              <td>${book.id}</td>
+              <td>${book.title}</td>
+              <td>
+                <button onclick=findBookById(${book.id})>Open</button>
+                <button onclick=deleteBookById(${book.id})>Delete</button>
+                <button onclick=getEditForm(${book})>Edit</button>
+              </td>
+            </tr>
+            `
+      })
+      // document.body.innerHTML += `</table>`
+    })
+
   }
+
 </script>
 
 <!--<h3 th:if="${!books.isEmpty()}">Books:</h3>-->

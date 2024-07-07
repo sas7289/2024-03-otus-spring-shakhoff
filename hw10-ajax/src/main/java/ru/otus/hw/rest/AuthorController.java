@@ -1,9 +1,9 @@
 package ru.otus.hw.rest;
 
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +15,11 @@ import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.dto.GenreDTO;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
-
-import java.util.Set;
 import ru.otus.hw.services.GenreService;
 
 @RequiredArgsConstructor
 @RestController
-public class BookController {
+public class AuthorController {
 
     private final BookService bookService;
 
@@ -29,12 +27,9 @@ public class BookController {
 
     private final GenreService genreService;
 
-    @GetMapping("/books")
-    public List<BookDTO> findAllBooks(Model model) {
-        List<BookDTO> books = bookService.findAll();
-        List<AuthorDTO> authors = authorService.findAll();
-        List<GenreDTO> genres = genreService.findAll();
-        return books;
+    @GetMapping("/authors")
+    public List<AuthorDTO> findAllBooks(Model model) {
+        return authorService.findAll();
     }
 
     @GetMapping("/books/{id}")
