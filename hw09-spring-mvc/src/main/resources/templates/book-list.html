@@ -68,9 +68,9 @@
   </div>
 
   <div>
-      <td th:each="genre: ${genres}">
-        <input name="genresIds"  type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">
-      </td>
+    <td th:each="genre: ${genres}">
+      <input name="genresIds" type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">
+    </td>
 
   </div>
 
