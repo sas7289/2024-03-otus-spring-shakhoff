@@ -48,7 +48,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен возвращать списки книг, авторов и жанров")
     void shouldReturnCorrectBookListAndAuthorListAndGenresList() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
 
@@ -72,7 +72,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен возвращать книгу по её ID")
     void shouldReturnCorrectBookById() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
 
@@ -95,7 +95,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен возвращать книгу по её ID и соответствующие ей жанры и автора")
     void shouldReturnCorrectBookByIdAndHerAuthorAndGenres() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
 
@@ -119,7 +119,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен сохранять новую книгу")
     void shouldSaveNewBook() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         prepareBook(authorDTO, genreDTO);
 
@@ -146,7 +146,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен обновлять книгу по её ID")
     void shouldUpdateBookById() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
         given(bookService.findById(1))
@@ -156,14 +156,12 @@ class BookControllerTest {
         given(genreService.findAll())
             .willReturn(List.of(genreDTO));
 
-
         String bookId = "1";
 
         ArgumentCaptor<Long> bookIdCapture = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<String> titleCapture = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Long> authorIdCapture = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<Set> genresIdCapture = ArgumentCaptor.forClass(Set.class);
-
 
         this.mockMvc.perform(get("/books/{bookId}", bookId))
             .andExpect(status().isOk())
@@ -194,7 +192,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен удалять книгу по её ID")
     void shouldDeleteBoById() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         prepareBook(authorDTO, genreDTO);
 
@@ -208,8 +206,8 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Должен выбрасывать исключение EntityNotFoundException")
-    void shouldThrowEntityNotFoundException() throws Exception {
+    @DisplayName("Должен выбрасывать исключение EntityNotFoundException при поиске книги по Id")
+    void shouldThrowEntityNotFoundExceptionWhenFindBookById() throws Exception {
         int bookId = 1;
         String expectedExceptionMessage = String.format("Book not found by id: %s", bookId);
 
@@ -217,6 +215,20 @@ class BookControllerTest {
             .willReturn(Optional.empty());
 
         this.mockMvc.perform(get("/books/{bookId}", "1"))
+            .andExpect(result -> Assertions.assertInstanceOf(RuntimeException.class, result.getResolvedException()))
+            .andExpect(result -> Assertions.assertEquals(expectedExceptionMessage, result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    @DisplayName("Должен выбрасывать исключение EntityNotFoundException при поиске книги по Id для дальнейшего редактирования")
+    void shouldThrowEntityNotFoundExceptionWhenFindBookByIdForEdit() throws Exception {
+        int bookId = 1;
+        String expectedExceptionMessage = String.format("Book not found by id: %s", bookId);
+
+        given(bookService.findById(1))
+            .willReturn(Optional.empty());
+
+        this.mockMvc.perform(get("/books/edit/{bookId}", "1"))
             .andExpect(result -> Assertions.assertInstanceOf(RuntimeException.class, result.getResolvedException()))
             .andExpect(result -> Assertions.assertEquals(expectedExceptionMessage, result.getResolvedException().getMessage()));
     }
@@ -229,7 +241,7 @@ class BookControllerTest {
         return new GenreDTO(1, "GenreName");
     }
 
-    private AuthorDTO prepeateAuthor() {
+    private AuthorDTO prepareAuthor() {
         return new AuthorDTO(1, "AuthorName");
     }
 }

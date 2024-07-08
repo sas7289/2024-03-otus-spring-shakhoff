@@ -54,7 +54,7 @@ public class BookController {
     @GetMapping("/books/edit/{id}")
     public String editBook(@PathVariable("id") long id, Model model) {
         BookDTO book = bookService.findById(id)
-            .orElseThrow(() -> new RuntimeException("ALARM!"));
+            .orElseThrow(() -> new EntityNotFoundException("Book not found by id: " + id));
         List<AuthorDTO> authors = authorService.findAll();
         List<GenreDTO> genres = genreService.findAll();
         model.addAttribute("book", book);
