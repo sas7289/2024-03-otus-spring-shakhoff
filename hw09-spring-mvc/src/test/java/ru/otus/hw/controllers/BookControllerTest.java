@@ -1,11 +1,13 @@
-package ru.otus.hw.commands;
+package ru.otus.hw.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.hw.controllers.BookController;
 import ru.otus.hw.dto.AuthorDTO;
 import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.dto.GenreDTO;
@@ -60,7 +61,7 @@ class BookControllerTest {
 
         this.mockMvc.perform(get("/books"))
             .andExpect(status().isOk())
-            .andExpect(view().name("list"))
+            .andExpect(view().name("book-list"))
             .andExpect(model().attributeExists("books"))
             .andExpect(model().attributeExists("authors"))
             .andExpect(model().attributeExists("genres"))
@@ -206,8 +207,22 @@ class BookControllerTest {
         assertThat(bookIdCapture.getValue()).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("Должен выбрасывать исключение EntityNotFoundException")
+    void shouldThrowEntityNotFoundException() throws Exception {
+        int bookId = 1;
+        String expectedExceptionMessage = String.format("Book not found by id: %s", bookId);
+
+        given(bookService.findById(bookId))
+            .willReturn(Optional.empty());
+
+        this.mockMvc.perform(get("/books/{bookId}", "1"))
+            .andExpect(result -> Assertions.assertInstanceOf(RuntimeException.class, result.getResolvedException()))
+            .andExpect(result -> Assertions.assertEquals(expectedExceptionMessage, result.getResolvedException().getMessage()));
+    }
+
     private BookDTO prepareBook(AuthorDTO authorDTO, GenreDTO genreDTO) {
-        return new BookDTO(1, "BookTitle", authorDTO, List.of(genreDTO), null);
+        return new BookDTO(1, "BookTitle", authorDTO, List.of(genreDTO), new ArrayList<>());
     }
 
     private GenreDTO prepareGenre() {
