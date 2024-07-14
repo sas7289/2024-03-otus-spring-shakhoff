@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,15 +64,14 @@ public class BookController {
     }
 
     @PostMapping("/books/update")
-    public String updateBook(@RequestParam long id,
+    public BookDTO updateBook(@RequestParam long id,
                              @RequestParam String title,
                              @RequestParam long authorId,
                              @RequestParam Set<Long> genresIds) {
-        var savedBook = bookService.update(id, title, authorId, genresIds);
-        return "redirect:/books";
+        return bookService.update(id, title, authorId, genresIds);
     }
 
-    @GetMapping("books/delete/{id}")
+    @DeleteMapping("books/delete/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable("id") long id) {
         bookService.deleteById(id);
         return ResponseEntity.ok().build();

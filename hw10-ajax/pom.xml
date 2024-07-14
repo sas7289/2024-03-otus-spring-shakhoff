@@ -76,11 +76,59 @@
     </dependency>
   </dependencies>
 
-  <build>
+  cd <build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.0</version>
+        <configuration>
+          <workingDirectory>src/main/frontend</workingDirectory>
+            <!-- optional: where to download node from. Defaults to https://nodejs.org/dist/ -->
+<!--            <nodeDownloadRoot>https://nodejs.org/dist/</nodeDownloadRoot>-->
+            <!-- optional: credentials to use from Maven settings to download node -->
+<!--            <serverId>server001</serverId>-->
+            <!-- optional: where to download npm from. Defaults to https://registry.npmjs.org/npm/-/ -->
+<!--            <npmDownloadRoot>https://nodejs.org/dist/npm/</npmDownloadRoot>-->
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v20.15.0</nodeVersion>
+<!--              <npmVersion>latest</npmVersion>-->
+<!--              <nodeDownloadRoot>https://nodejs.org/dist/v20.11.0/</nodeDownloadRoot>-->
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+<!--          <execution>-->
+<!--            <id>npm build</id>-->
+<!--            <goals>-->
+<!--              <goal>npm</goal>-->
+<!--            </goals>-->
+<!--            <phase>generate-resources</phase>-->
+<!--            <configuration>-->
+<!--              <arguments>run build</arguments>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+        </executions>
       </plugin>
     </plugins>
   </build>
