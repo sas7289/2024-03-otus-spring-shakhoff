@@ -38,14 +38,17 @@ export class BookComponent {
 
   initBooks(): void {
     this.bookService.getAllBooks().subscribe(books => {
-      console.log('books lenght: ' + books.length)
       this.books = books
     })
   }
 
   openBook(book: Book) {
     this.bookService.setBook(book)
-    this.router.navigate(['edit-book']).then(r => {
+    this.router.navigate(['edit-book']).then(() => {
     })
+  }
+
+  navigateToCreateBook() {
+    this.router.navigate(['create-book']).then();
   }
 }

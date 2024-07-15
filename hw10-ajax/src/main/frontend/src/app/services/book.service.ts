@@ -40,9 +40,8 @@ export class BookService {
     return this.currentBook;
   }
 
-  updateBook(book: Book) {
+  update(book: Book) {
     let genreIds = book.genres.map(genre => genre.id).join(',');
-    console.log("genres: " + JSON.stringify(genreIds))
     let httpParams = new HttpParams().append('id', book.id)
     .append('title', book.title)
     .append('authorId', book.author.id)
@@ -52,12 +51,19 @@ export class BookService {
     });
   }
 
-  deleteBook(id: number) {
+  create(book: Book) {
+    let genreIds = book.genres.map(genre => genre.id).join(',');
+    let httpParams = new HttpParams()
+    .append('title', book.title)
+    .append('authorId', book.author.id)
+    .append('genresIds', genreIds);
+    return this.http.post("/books", "", {
+      params: httpParams
+    });
+  }
+
+  delete(id: number) {
     const url = `books/delete/${id}`;
-    // let httpParams = new HttpParams().append('id', book.id)
-    // .append('title', book.title)
-    // .append('authorId', book.author.id)
-    // .append('genresIds', genreIds);
     return this.http.delete(url);
   }
 }

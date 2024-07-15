@@ -9,16 +9,16 @@ import {Router} from "@angular/router";
 
 @Component({
   standalone: true,
-  selector: 'edit-book',
-  templateUrl: './edit-book.component.html',
+  selector: 'create-book',
+  templateUrl: './create-book.component.html',
   imports: [
     FormsModule,
     NgForOf
   ]
 })
-export class EditBookComponent {
+export class CreateBookComponent {
 
-  currentBook: Book = {
+  book: Book = {
     author: {id: 0, fullName: ""},
     genres: [],
     id: 0,
@@ -33,11 +33,11 @@ export class EditBookComponent {
   }
 
   ngOnInit() {
-    this.currentBook = this.bookService.getCurrentBook();
+    this.book = this.bookService.getCurrentBook();
     this.bookService.getAllGenres().subscribe(value => {
       this.genres = value;
       this.genres.forEach(genre => {
-        if (this.currentBook.genres.map(genre => genre.id).includes(genre.id)) {
+        if (this.book.genres.map(genre => genre.id).includes(genre.id)) {
           this.selectedGenres.push(genre)
         }
       })
@@ -50,21 +50,19 @@ export class EditBookComponent {
 
   updateBook(myBookForm: NgForm) {
     if (myBookForm.valid) {
-      let selectedAuthor = this.authors.find(author => author.id === myBookForm.value.author);
-      if (selectedAuthor) {
-        let bookToUpdate = {
-          id: this.currentBook.id,
-          title: myBookForm.value.title,
-          author: {
-            id: selectedAuthor.id,
-            fullName: selectedAuthor.fullName
-          },
-          genres: this.selectedGenres
-        };
-        this.bookService.update(bookToUpdate).subscribe(value => {
-          this.navigateToAllBooks()
+      let bookToUpdate = {
+        id: this.book.id,
+        title: myBookForm.value.title,
+        author: {
+          id: myBookForm.value.author.id,
+          fullName: myBookForm.value.author.fullName
+        },
+        genres: this.selectedGenres
+      };
+      this.bookService.update(bookToUpdate).subscribe(value => {
+        this.router.navigate(['books']).then(r => {
         })
-      }
+      })
     }
   }
 
@@ -79,23 +77,6 @@ export class EditBookComponent {
   }
 
   isGenreCheck(genre: Genre) {
-    return this.currentBook.genres.map(genre => genre.id).includes(genre.id);
-  }
-
-  deleteBook(id: number) {
-    this.bookService.delete(id).subscribe(value => {
-      this.navigateToAllBooks();
-    })
-  }
-
-  navigateToAllBooks() {
-    this.router.navigate(['books']).then(r => {
-    })
-  }
-
-  isAuthorSelected(id: number) {
-    let b = this.currentBook.author.id === id;
-    console.log(`author selected. id: ${id} : ${b}`)
-    return this.currentBook.author.id === id;
+    return this.book.genres.map(genre => genre.id).includes(genre.id);
   }
 }
