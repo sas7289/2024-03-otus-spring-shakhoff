@@ -46,7 +46,7 @@ export class BookService {
     .append('title', book.title)
     .append('authorId', book.author.id)
     .append('genresIds', genreIds);
-    return this.http.post("/books/update", "", {
+    return this.http.put("/books/update", "", {
       params: httpParams
     });
   }

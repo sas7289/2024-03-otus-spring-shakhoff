@@ -48,10 +48,10 @@ export class CreateBookComponent {
     })
   }
 
-  updateBook(myBookForm: NgForm) {
+  createBook(myBookForm: NgForm) {
     if (myBookForm.valid) {
       let bookToUpdate = {
-        id: this.book.id,
+        id: 0,
         title: myBookForm.value.title,
         author: {
           id: myBookForm.value.author.id,
@@ -59,7 +59,7 @@ export class CreateBookComponent {
         },
         genres: this.selectedGenres
       };
-      this.bookService.update(bookToUpdate).subscribe(value => {
+      this.bookService.create(bookToUpdate).subscribe(value => {
         this.router.navigate(['books']).then(r => {
         })
       })

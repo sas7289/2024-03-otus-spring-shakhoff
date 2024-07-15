@@ -1,5 +1,5 @@
 <H1>{{book.title}}</H1>
-<form #myBookForm="ngForm" (ngSubmit)="updateBook(myBookForm)">
+<form #myBookForm="ngForm" (ngSubmit)="createBook(myBookForm)">
   <input name="title" ngModel required>
 
   <div *ngFor="let genre of genres">

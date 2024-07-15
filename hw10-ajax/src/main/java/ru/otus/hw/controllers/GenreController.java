@@ -1,8 +1,7 @@
-package ru.otus.hw.rest;
+package ru.otus.hw.controllers;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.hw.dto.GenreDTO;
@@ -15,7 +14,7 @@ public class GenreController {
     private final GenreService genreService;
 
     @GetMapping("/genres")
-    public List<GenreDTO> findAllBooks(Model model) {
+    public List<GenreDTO> findAllBooks() {
         return genreService.findAll();
     }
 }

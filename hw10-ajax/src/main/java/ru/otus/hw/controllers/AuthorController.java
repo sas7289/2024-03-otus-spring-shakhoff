@@ -1,8 +1,7 @@
-package ru.otus.hw.rest;
+package ru.otus.hw.controllers;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.hw.dto.AuthorDTO;
@@ -15,7 +14,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping("/authors")
-    public List<AuthorDTO> findAllBooks(Model model) {
+    public List<AuthorDTO> findAllBooks() {
         return authorService.findAll();
     }
 }
