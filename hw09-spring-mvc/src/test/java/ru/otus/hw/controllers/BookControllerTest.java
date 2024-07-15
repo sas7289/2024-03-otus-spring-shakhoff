@@ -1,11 +1,13 @@
-package ru.otus.hw.commands;
+package ru.otus.hw.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.hw.controllers.BookController;
 import ru.otus.hw.dto.AuthorDTO;
 import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.dto.GenreDTO;
@@ -47,7 +48,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен возвращать списки книг, авторов и жанров")
     void shouldReturnCorrectBookListAndAuthorListAndGenresList() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
 
@@ -60,7 +61,7 @@ class BookControllerTest {
 
         this.mockMvc.perform(get("/books"))
             .andExpect(status().isOk())
-            .andExpect(view().name("list"))
+            .andExpect(view().name("book-list"))
             .andExpect(model().attributeExists("books"))
             .andExpect(model().attributeExists("authors"))
             .andExpect(model().attributeExists("genres"))
@@ -71,7 +72,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен возвращать книгу по её ID")
     void shouldReturnCorrectBookById() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
 
@@ -94,7 +95,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен возвращать книгу по её ID и соответствующие ей жанры и автора")
     void shouldReturnCorrectBookByIdAndHerAuthorAndGenres() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
 
@@ -118,7 +119,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен сохранять новую книгу")
     void shouldSaveNewBook() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         prepareBook(authorDTO, genreDTO);
 
@@ -145,7 +146,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен обновлять книгу по её ID")
     void shouldUpdateBookById() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
         given(bookService.findById(1))
@@ -155,14 +156,12 @@ class BookControllerTest {
         given(genreService.findAll())
             .willReturn(List.of(genreDTO));
 
-
         String bookId = "1";
 
         ArgumentCaptor<Long> bookIdCapture = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<String> titleCapture = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Long> authorIdCapture = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<Set> genresIdCapture = ArgumentCaptor.forClass(Set.class);
-
 
         this.mockMvc.perform(get("/books/{bookId}", bookId))
             .andExpect(status().isOk())
@@ -193,7 +192,7 @@ class BookControllerTest {
     @Test
     @DisplayName("должен удалять книгу по её ID")
     void shouldDeleteBoById() throws Exception {
-        AuthorDTO authorDTO = prepeateAuthor();
+        AuthorDTO authorDTO = prepareAuthor();
         GenreDTO genreDTO = prepareGenre();
         prepareBook(authorDTO, genreDTO);
 
@@ -206,15 +205,43 @@ class BookControllerTest {
         assertThat(bookIdCapture.getValue()).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("Должен выбрасывать исключение EntityNotFoundException при поиске книги по Id")
+    void shouldThrowEntityNotFoundExceptionWhenFindBookById() throws Exception {
+        int bookId = 1;
+        String expectedExceptionMessage = String.format("Book not found by id: %s", bookId);
+
+        given(bookService.findById(bookId))
+            .willReturn(Optional.empty());
+
+        this.mockMvc.perform(get("/books/{bookId}", "1"))
+            .andExpect(result -> Assertions.assertInstanceOf(RuntimeException.class, result.getResolvedException()))
+            .andExpect(result -> Assertions.assertEquals(expectedExceptionMessage, result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    @DisplayName("Должен выбрасывать исключение EntityNotFoundException при поиске книги по Id для дальнейшего редактирования")
+    void shouldThrowEntityNotFoundExceptionWhenFindBookByIdForEdit() throws Exception {
+        int bookId = 1;
+        String expectedExceptionMessage = String.format("Book not found by id: %s", bookId);
+
+        given(bookService.findById(1))
+            .willReturn(Optional.empty());
+
+        this.mockMvc.perform(get("/books/edit/{bookId}", "1"))
+            .andExpect(result -> Assertions.assertInstanceOf(RuntimeException.class, result.getResolvedException()))
+            .andExpect(result -> Assertions.assertEquals(expectedExceptionMessage, result.getResolvedException().getMessage()));
+    }
+
     private BookDTO prepareBook(AuthorDTO authorDTO, GenreDTO genreDTO) {
-        return new BookDTO(1, "BookTitle", authorDTO, List.of(genreDTO), null);
+        return new BookDTO(1, "BookTitle", authorDTO, List.of(genreDTO), new ArrayList<>());
     }
 
     private GenreDTO prepareGenre() {
         return new GenreDTO(1, "GenreName");
     }
 
-    private AuthorDTO prepeateAuthor() {
+    private AuthorDTO prepareAuthor() {
         return new AuthorDTO(1, "AuthorName");
     }
 }

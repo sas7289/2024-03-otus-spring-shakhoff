@@ -1,61 +1,55 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Edit person</title>
-    <style type="text/css">
-        body {
-            padding: 50px;
-        }
+  <meta charset="UTF-8"/>
+  <title>Edit book</title>
+  <style type="text/css">
+    body {
+      padding: 50px;
+    }
 
-        label {
-            display: inline-block;
-            width: 100px;
-        }
+    label {
+      display: inline-block;
+      width: 100px;
+    }
 
-        input:read-only {
-            background: lightgray;
-        }
+    input:read-only {
+      background: lightgray;
+    }
 
-        .row {
-            margin-top: 10px;
-        }
-    </style>
+    .row {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-<!-- Person edition -->
 <form id="edit-form" action="edit.html" th:method="post" th:action="@{/books/update}">
-    <h3>Book Info:</h3>
+  <h3>Book Info:</h3>
 
-    <div>
-<!--        <a th:name="id" th:value="${book.getId()}"></a>-->
-        <input type="hidden" th:name="id" th:value="${book.getId()}" readonly="readonly">
-    </div>
+  <div>
+    <input type="hidden" th:name="id" th:value="${book.getId()}" readonly="readonly">
+  </div>
 
-    <div class="row">
-        <label for="title">Book's title:</label>
-        <input id="title" th:name="title" type="text" th:value="${book.getTitle()}"/>
-    </div>
+  <div class="row">
+    <label for="title">Book's title:</label>
+    <input id="title" th:name="title" type="text" th:value="${book.getTitle()}"/>
+  </div>
 
-    <div>
-        <label for="authors">Author</label>
-        <select id="authors" name="authorId">
-            <option th:each="author: ${authors}" th:value="${author.getId()}" th:text="${author.getFullName()}"></option>
-        </select>
-    </div>
+  <div>
+    <label for="authors">Author</label>
+    <select id="authors" name="authorId">
+      <option th:each="author: ${authors}" th:value="${author.getId()}" th:text="${author.getFullName()}"></option>
+    </select>
+  </div>
 
-    <div>
-        <input name="genresIds" th:each="genre: ${genres}" type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">
-    </div>
-<!--    <div class="row">-->
-<!--        <label for="person-name-input">Name:</label>-->
-<!--        <input id="person-name-input" name="name" type="text" value="John Doe" th:value="*{name}"/>-->
-<!--    </div>-->
+  <div>
+    <input name="genresIds" th:each="genre: ${genres}" type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">
+  </div>
 
-    <div class="row">
-        <button type="submit">Save</button>
-<!--        <a href="list.html" th:href="@{/}"><button type="button">Cancel</button></a>-->
-    </div>
+
+  <div class="row">
+    <button type="submit">Save</button>
+  </div>
 </form>
 
 </body>

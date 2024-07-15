@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/>
-  <title>List of all persons</title>
+  <title>List of all books</title>
   <style type="text/css">
     body {
       padding: 50px;
@@ -68,9 +68,9 @@
   </div>
 
   <div>
-      <td th:each="genre: ${genres}">
-        <input name="genresIds"  type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">
-      </td>
+    <td th:each="genre: ${genres}">
+      <input name="genresIds" type="checkbox" th:value="${genre.getId()}" th:text="${genre.getName()}">
+    </td>
 
   </div>
 
