@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      authentication-database:
+      port: 27017
+      host: 127.0.0.1
+      database: otus_hw_08
+
+mongock:
+  migration-scan-package:
+    - ru.otus.hw.changelog
+  runner-type: "InitializingBean"
+  driver:
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
