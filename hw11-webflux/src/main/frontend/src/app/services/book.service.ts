@@ -11,9 +11,9 @@ import {Author} from "../models/author";
 })
 export class BookService {
   currentBook: Book = {
-    author: {id: 0, fullName: ""},
+    author: {id: '', fullName: ""},
     genres: [],
-    id: 0,
+    id: '',
     title: ""
   };
 
@@ -62,7 +62,7 @@ export class BookService {
     });
   }
 
-  delete(id: number) {
+  delete(id: string) {
     const url = `api/books/delete/${id}`;
     return this.http.delete(url);
   }

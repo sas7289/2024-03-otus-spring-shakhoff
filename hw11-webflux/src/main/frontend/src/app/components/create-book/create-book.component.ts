@@ -19,9 +19,9 @@ import {Router} from "@angular/router";
 export class CreateBookComponent {
 
   book: Book = {
-    author: {id: 0, fullName: ""},
+    author: {id: '', fullName: ""},
     genres: [],
-    id: 0,
+    id: '',
     title: ""
   };
   authors: Author[] = [];
@@ -51,7 +51,7 @@ export class CreateBookComponent {
   createBook(myBookForm: NgForm) {
     if (myBookForm.valid) {
       let bookToUpdate = {
-        id: 0,
+        id: '',
         title: myBookForm.value.title,
         author: {
           id: myBookForm.value.author.id,

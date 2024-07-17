@@ -33,17 +33,24 @@
       <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/io.mongock/mongock-springboot -->
     <dependency>
-      <groupId>com.github.cloudyrock.mongock</groupId>
-      <artifactId>mongock-spring-v5</artifactId>
-      <version>${mongock.version}</version>
+      <groupId>io.mongock</groupId>
+      <artifactId>mongock-springboot</artifactId>
+      <version>5.4.4</version>
+      <scope>provided</scope>
     </dependency>
 
+
+    <!-- https://mvnrepository.com/artifact/io.mongock/mongodb-reactive-driver -->
     <dependency>
-      <groupId>com.github.cloudyrock.mongock</groupId>
-      <artifactId>mongodb-springdata-v3-driver</artifactId>
-      <version>${mongock.version}</version>
+      <groupId>io.mongock</groupId>
+      <artifactId>mongodb-reactive-driver</artifactId>
+      <version>5.4.4</version>
     </dependency>
+
+
+
 
 
     <dependency>
@@ -53,4 +60,43 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.0</version>
+        <configuration>
+          <workingDirectory>src/main/frontend</workingDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v20.15.0</nodeVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

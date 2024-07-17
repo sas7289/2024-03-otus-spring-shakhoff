@@ -8,5 +8,5 @@ import java.util.Set;
 
 public interface GenreRepository extends ReactiveMongoRepository<Genre, Long> {
 
-    Flux<Genre> findAllByIdIn(Set<Long> ids);
+    Flux<Genre> findAllByIdIn(Set<String> ids);
 }

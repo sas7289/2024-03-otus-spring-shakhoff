@@ -6,5 +6,5 @@ import ru.otus.hw.models.Author;
 
 public interface AuthorRepository extends ReactiveMongoRepository<Author, Long> {
 
-    Mono<Author> findById(long id);
+    Mono<Author> findById(String id);
 }

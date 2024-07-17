@@ -9,7 +9,7 @@ spring:
 mongock:
   migration-scan-package:
     - ru.otus.hw.changelog
-  runner-type: "InitializingBean"
+  runner-type: "applicationrunner"
   driver:
   mongo-db:
     write-concern:

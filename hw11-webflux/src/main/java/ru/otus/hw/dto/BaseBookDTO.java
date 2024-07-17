@@ -1,5 +1,7 @@
 package ru.otus.hw.dto;
 
+import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,5 +13,7 @@ public class BaseBookDTO {
 
     private String title;
 
-    private AuthorDTO author;
+    private String authorId;
+
+    private Set<String> genreIds;
 }

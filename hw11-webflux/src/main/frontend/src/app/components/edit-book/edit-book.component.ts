@@ -19,9 +19,9 @@ import {Router} from "@angular/router";
 export class EditBookComponent {
 
   currentBook: Book = {
-    author: {id: 0, fullName: ""},
+    author: {id: '', fullName: ""},
     genres: [],
-    id: 0,
+    id: '',
     title: ""
   };
   authors: Author[] = [];
@@ -82,7 +82,7 @@ export class EditBookComponent {
     return this.currentBook.genres.map(genre => genre.id).includes(genre.id);
   }
 
-  deleteBook(id: number) {
+  deleteBook(id: string) {
     this.bookService.delete(id).subscribe(value => {
       this.navigateToAllBooks();
     })
@@ -93,7 +93,7 @@ export class EditBookComponent {
     })
   }
 
-  isAuthorSelected(id: number) {
+  isAuthorSelected(id: string) {
     let b = this.currentBook.author.id === id;
     console.log(`author selected. id: ${id} : ${b}`)
     return this.currentBook.author.id === id;

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import ru.otus.hw.dto.BaseBookDTO;
 import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.services.BookService;
@@ -37,16 +38,16 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public Mono<BookDTO> insertBook(@RequestParam String title, @RequestParam long authorId,
-                                    @RequestParam Set<Long> genresIds) {
+    public Mono<BaseBookDTO> insertBook(@RequestParam String title, @RequestParam String authorId,
+                                        @RequestParam Set<String> genresIds) {
         return bookService.insert(title, authorId, genresIds);
     }
 
     @PutMapping("/books/update")
-    public Mono<BookDTO> updateBook(@RequestParam String id,
+    public Mono<BaseBookDTO> updateBook(@RequestParam String id,
                               @RequestParam String title,
-                              @RequestParam long authorId,
-                              @RequestParam Set<Long> genresIds) {
+                              @RequestParam String authorId,
+                              @RequestParam Set<String> genresIds) {
         return bookService.update(id, title, authorId, genresIds);
     }
 
