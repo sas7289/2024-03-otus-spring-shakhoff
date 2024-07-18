@@ -42,11 +42,10 @@ export class BookService {
 
   update(book: Book) {
     let genreIds = book.genres.map(genre => genre.id).join(',');
-    let httpParams = new HttpParams().append('id', book.id)
-    .append('title', book.title)
+    let httpParams = new HttpParams().append('title', book.title)
     .append('authorId', book.author.id)
     .append('genresIds', genreIds);
-    return this.http.put("/books/update", "", {
+    return this.http.put(`/books/${book.id}`, "", {
       params: httpParams
     });
   }
@@ -63,7 +62,7 @@ export class BookService {
   }
 
   delete(id: number) {
-    const url = `books/delete/${id}`;
+    const url = `books/${id}`;
     return this.http.delete(url);
   }
 }
