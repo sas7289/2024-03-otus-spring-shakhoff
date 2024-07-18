@@ -43,15 +43,15 @@ public class BookController {
         return bookService.insert(title, authorId, genresIds);
     }
 
-    @PutMapping("/books/update")
-    public Mono<BaseBookDTO> updateBook(@RequestParam String id,
+    @PutMapping("/books/{id}")
+    public Mono<BaseBookDTO> updateBook(@PathVariable("id") String id,
                               @RequestParam String title,
                               @RequestParam String authorId,
                               @RequestParam Set<String> genresIds) {
         return bookService.update(id, title, authorId, genresIds);
     }
 
-    @DeleteMapping("books/delete/{id}")
+    @DeleteMapping("books/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable("id") String id) {
         bookService.deleteById(id);
         return ResponseEntity.ok().build();

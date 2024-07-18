@@ -21,15 +21,15 @@ export class BookService {
   }
 
   getAllBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>("api/books");
+    return this.http.get<Book[]>("books");
   }
 
   getAllAuthors(): Observable<Author[]> {
-    return this.http.get<Author[]>("api/authors");
+    return this.http.get<Author[]>("authors");
   }
 
   getAllGenres(): Observable<Genre[]> {
-    return this.http.get<Genre[]>("api/genres");
+    return this.http.get<Genre[]>("genres");
   }
 
   setBook(book: Book) {
@@ -42,11 +42,11 @@ export class BookService {
 
   update(book: Book) {
     let genreIds = book.genres.map(genre => genre.id).join(',');
-    let httpParams = new HttpParams().append('id', book.id)
+    let httpParams = new HttpParams()
     .append('title', book.title)
     .append('authorId', book.author.id)
     .append('genresIds', genreIds);
-    return this.http.put("api/books/update", "", {
+    return this.http.put(`books/${book.id}`, "", {
       params: httpParams
     });
   }
@@ -57,13 +57,13 @@ export class BookService {
     .append('title', book.title)
     .append('authorId', book.author.id)
     .append('genresIds', genreIds);
-    return this.http.post("api/books", "", {
+    return this.http.post("books", "", {
       params: httpParams
     });
   }
 
   delete(id: string) {
-    const url = `api/books/delete/${id}`;
+    const url = `books/${id}`;
     return this.http.delete(url);
   }
 }

@@ -81,7 +81,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteById(String id) {
-        bookRepository.deleteById(id);
+        bookRepository.deleteById(id).subscribe();
     }
 
     private Mono<Book> save(String id, String title, String authorId, Set<String> genresIds) {

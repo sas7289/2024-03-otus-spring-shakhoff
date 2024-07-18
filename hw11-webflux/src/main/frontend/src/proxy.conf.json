@@ -1,23 +1,17 @@
 {
-  "/api/books": {
+  "/books": {
     "target": "http://localhost:8080",
     "secure": false,
-    "lofLevel": "debug",
-    "pathRewrite": {
-      "^/api" : ""}
+    "lofLevel": "debug"
   },
-  "/api/genres": {
+  "/genres": {
     "target": "http://localhost:8080",
     "secure": false,
-    "lofLevel": "debug",
-    "pathRewrite": {
-      "^/api" : ""}
+    "lofLevel": "debug"
   },
-  "/api/authors": {
+  "/authors": {
     "target": "http://localhost:8080",
     "secure": false,
-    "lofLevel": "debug",
-    "pathRewrite": {
-      "^/api" : ""}
+    "lofLevel": "debug"
   }
 }
