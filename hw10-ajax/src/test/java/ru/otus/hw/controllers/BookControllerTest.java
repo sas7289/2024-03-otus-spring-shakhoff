@@ -156,8 +156,7 @@ class BookControllerTest {
             .willReturn(bookDTO);
 
         this.mockMvc.perform(
-                put("/books/update")
-                    .queryParam("id", String.valueOf(bookId))
+                put("/books/{id}", bookId)
                     .queryParam("title", updatedBookTitle)
                     .queryParam("authorId", String.valueOf(3))
                     .queryParam("genresIds", String.valueOf(3), String.valueOf(4)))
@@ -188,7 +187,7 @@ class BookControllerTest {
 
         ArgumentCaptor<Long> bookIdCapture = ArgumentCaptor.forClass(Long.class);
 
-        this.mockMvc.perform(delete("/books/delete/{bookId}", "1"))
+        this.mockMvc.perform(delete("/books/{bookId}", "1"))
             .andExpect(status().isOk());
         verify(bookService, times(1)).deleteById(bookIdCapture.capture());
         assertThat(bookIdCapture.getValue()).isEqualTo(1);
