@@ -6,7 +6,7 @@ import ru.otus.hw.models.Genre;
 
 import java.util.Set;
 
-public interface GenreRepository extends ReactiveMongoRepository<Genre, Long> {
+public interface GenreRepository extends ReactiveMongoRepository<Genre, String> {
 
     Flux<Genre> findAllByIdIn(Set<String> ids);
 }
