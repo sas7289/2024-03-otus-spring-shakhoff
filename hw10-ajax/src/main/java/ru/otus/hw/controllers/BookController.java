@@ -42,15 +42,15 @@ public class BookController {
         return bookService.insert(title, authorId, genresIds);
     }
 
-    @PutMapping("/books/update")
-    public BookDTO updateBook(@RequestParam long id,
+    @PutMapping("/books/{id}")
+    public BookDTO updateBook(@PathVariable("id") long id,
                               @RequestParam String title,
                               @RequestParam long authorId,
                               @RequestParam Set<Long> genresIds) {
         return bookService.update(id, title, authorId, genresIds);
     }
 
-    @DeleteMapping("books/delete/{id}")
+    @DeleteMapping("books/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable("id") long id) {
         bookService.deleteById(id);
         return ResponseEntity.ok().build();
