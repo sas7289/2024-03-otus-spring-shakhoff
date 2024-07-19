@@ -29,7 +29,7 @@ import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
 @SpringBootTest
-class BookServiceImplTest {
+class BookServiceTest {
 
     @Autowired
     private BookService bookService;
