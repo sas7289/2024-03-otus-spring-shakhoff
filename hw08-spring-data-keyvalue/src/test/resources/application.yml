@@ -1,21 +1,17 @@
 spring:
-  data:
-    mongodb:
-      authentication-database:
-      port: 27017
-      host: 127.0.0.1
-      database: otus_hw_08
+  mongodb:
+    embedded:
+      version: 4.0.2
   shell:
     interactive:
       enabled: false
-#de:
-#  flapdoodle:
-#    mongodb:
-#      embedded:
-#        version: 4.0.2
-
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.2
 mongock:
-  runner-type: "InitializingBean"
+  enabled: true
   mongo-db:
     write-concern:
       journal: false
