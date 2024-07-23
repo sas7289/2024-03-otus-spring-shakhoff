@@ -50,18 +50,18 @@
       <version>${mongock.version}</version>
     </dependency>
 
-<!--    &lt;!&ndash; https://mvnrepository.com/artifact/de.flapdoodle.embed/de.flapdoodle.embed.mongo &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>de.flapdoodle.embed</groupId>-->
-<!--      <artifactId>de.flapdoodle.embed.mongo</artifactId>-->
-<!--      <version>4.7.0</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>de.flapdoodle.embed</groupId>-->
-<!--      <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>-->
-<!--      <version>4.7.0</version>-->
-<!--    </dependency>-->
+    <!-- https://mvnrepository.com/artifact/de.flapdoodle.embed/de.flapdoodle.embed.mongo -->
+    <dependency>
+      <groupId>de.flapdoodle.embed</groupId>
+      <artifactId>de.flapdoodle.embed.mongo</artifactId>
+      <version>4.7.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.flapdoodle.embed</groupId>
+      <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
+      <version>4.7.0</version>
+    </dependency>
 
 
     <dependency>

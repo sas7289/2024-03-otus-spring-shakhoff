@@ -2,6 +2,7 @@ package ru.otus.hw.converters;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.AuthorDTO;
 import ru.otus.hw.dto.CommentDTO;
@@ -41,7 +42,7 @@ public class BookConverter {
     public BookDTO toDto(Book book) {
         List<GenreDTO> genreDtos = book.getGenres().stream().map(genreConverter::toDto).toList();
         AuthorDTO authorDTO = authorConverter.toDto(book.getAuthor());
-        List<CommentDTO> commentDTOS = book.getComments().stream()
+        List<CommentDTO> commentDTOS = ListUtils.emptyIfNull(book.getComments()).stream()
             .map(commentConverter::toDto)
             .toList();
         return new BookDTO(book.getId(), book.getTitle(), authorDTO, genreDtos, commentDTOS);

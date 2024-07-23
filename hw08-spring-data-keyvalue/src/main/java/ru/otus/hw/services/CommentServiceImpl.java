@@ -2,7 +2,9 @@ package ru.otus.hw.services;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,10 @@ public class CommentServiceImpl implements CommentService {
             .orElseThrow(() -> new EntityNotFoundException("Book not found by id: " + bookId));
         Comment comment = new Comment(null, content, createdDate, createdDate, book);
         comment = commentRepository.save(comment);
+
+        if (Objects.isNull(book.getComments())) {
+            book.setComments(new ArrayList<>());
+        }
         book.getComments().add(comment);
         bookRepository.save(book);
         return commentConverter.toDto(comment);

@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverter;
@@ -49,21 +50,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public BookDTO insert(String title, String authorId, Set<String> genresIds) {
         Book savedBook = save(null, title, authorId, genresIds);
         return bookConverter.toDto(savedBook);
     }
 
     @Override
-    @Transactional
     public BookDTO update(String id, String title, String authorId, Set<String> genresIds) {
         Book updatedBook = save(id, title, authorId, genresIds);
         return bookConverter.toDto(updatedBook);
     }
 
     @Override
-    @Transactional
     public void deleteById(String id) {
         commentRepository.findByBookId(id).stream()
             .map(Comment::getId)
@@ -82,10 +80,14 @@ public class BookServiceImpl implements BookService {
         if (isEmpty(genres) || genresIds.size() != genres.size()) {
             throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresIds));
         }
+        var book = new Book(id, title, author, genres, null);
 
-        List<Comment> comments = commentRepository.findByBookId(id);
+        if (StringUtils.isNotEmpty(id)) {
+            List<Comment> comments = commentRepository.findByBookId(id);
+            comments.forEach(comment -> comment.setBook(book));
+            book.setComments(comments);
+        }
 
-        var book = new Book(id, title, author, genres, comments);
         return bookRepository.save(book);
     }
 }

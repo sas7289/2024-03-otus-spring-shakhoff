@@ -7,10 +7,11 @@ spring:
       database: otus_hw_08
 
 mongock:
-  runner-type: "ApplicationRunner"
+  runner-type: "InitializingBean"
   change-logs-scan-package:
     - ru.otus.hw.changelog
   mongo-db:
     write-concern:
       journal: false
     read-concern: local
+  enabled: true
