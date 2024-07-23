@@ -1,0 +1,5 @@
+<h1>Books:</h1>
+<div (click)="openBook(book)" *ngFor="let book of books">
+  <label [textContent]="book.title"></label>
+</div>
+<button (click)="navigateToCreateBook()">Create book</button>

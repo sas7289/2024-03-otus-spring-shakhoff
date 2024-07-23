@@ -1,0 +1,17 @@
+{
+  "/books": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "lofLevel": "debug"
+  },
+  "/genres": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "lofLevel": "debug"
+  },
+  "/authors": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "lofLevel": "debug"
+  }
+}

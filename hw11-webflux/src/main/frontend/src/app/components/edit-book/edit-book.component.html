@@ -1,0 +1,17 @@
+<H1>{{currentBook.title}}</H1>
+<form #myBookForm="ngForm" (ngSubmit)="updateBook(myBookForm)">
+  <input name="title" ngModel required>
+
+  <div *ngFor="let genre of genres">
+    <label for="{{genre.name}}">{{genre.name}}</label>
+    <input (change)="processCheckBox($event, genre)" id="{{genre.name}}" name="{{genre.name}}" type="checkbox" value="{{genre.name}}"
+    [checked]="isGenreCheck(genre)">
+  </div>
+
+  <select name="author" [(ngModel)]="currentBook.author.id">
+    <option *ngFor="let author of authors" [ngValue]="author.id">{{author.fullName}}</option>
+  </select>
+  <button type="submit">Update book</button>
+</form>
+<button type="button" (click)="deleteBook(currentBook.id)">Delete book</button>
+<button type="button" (click)="navigateToAllBooks()">Back</button>
