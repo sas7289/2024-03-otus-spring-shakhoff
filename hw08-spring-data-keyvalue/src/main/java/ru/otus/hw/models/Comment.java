@@ -23,6 +23,6 @@ public class Comment {
 
     private LocalDateTime updatedDate;
 
-    @DBRef
+    @DBRef(lazy = true)
     private Book book;
 }

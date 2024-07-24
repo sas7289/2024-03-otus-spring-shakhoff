@@ -24,6 +24,6 @@ public class Book {
 
     private List<Genre> genres;
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<Comment> comments;
 }
