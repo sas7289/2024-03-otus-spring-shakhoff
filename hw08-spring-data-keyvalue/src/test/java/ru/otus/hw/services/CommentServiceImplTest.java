@@ -6,7 +6,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +28,7 @@ import ru.otus.hw.models.Comment;
 
 @SpringBootTest
 @EnableAutoConfiguration(exclude = {StandardCommandsAutoConfiguration.class})
+@TestMethodOrder(OrderAnnotation.class)
 class CommentServiceImplTest {
 
     @Autowired
@@ -42,6 +46,7 @@ class CommentServiceImplTest {
 
     @DisplayName("должен загружать список комментариев по id книги")
     @Test
+    @Order(1)
     void shouldReturnCorrectCommentList() {
         String bookId = "3";
         assertThat(commentService.findByBookId(bookId))
@@ -52,6 +57,7 @@ class CommentServiceImplTest {
 
     @DisplayName("должен создавать новый комментарий")
     @Test
+    @Order(2)
     void shouldInsertComment() {
         LocalDateTime createdDate = LocalDateTime.parse("2024-05-01T22:22:22");
         CommentDTO expectedNewCommentDto = new CommentDTO(null, "new Content", createdDate, null,
@@ -93,12 +99,9 @@ class CommentServiceImplTest {
             .isEqualTo(List.of(existCommentDto, expectedNewCommentDto));
     }
 
-    @DisplayName("должен создавать новый комментарий")
+    @DisplayName("должен обновлять существующий комментарий")
     @Test
     void shouldUpdateComment() {
-        LocalDateTime createdDate = LocalDateTime.parse("2024-05-01T22:22:22");
-//        CommentDTO expectedNewCommentDto = new CommentDTO(null, "new Content", createdDate, null,
-//            new BaseBookDTO("3", "Book_3", new AuthorDTO("3", "Author_3")));
         CommentDTO existCommentDto = prepareCommentDto();
 
         assertThat(bookConverter.toDto(mongoTemplate.findById("3", Book.class)))

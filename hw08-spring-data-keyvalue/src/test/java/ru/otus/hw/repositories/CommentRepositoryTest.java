@@ -3,7 +3,6 @@ package ru.otus.hw.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import java.util.Optional;
@@ -50,9 +49,9 @@ class CommentRepositoryTest {
         LocalDateTime updateDate = LocalDateTime.parse("2024-06-02T13:02:15");
 
         Author author = new Author("1", "Author_1");
-        Genre genre = new Genre("1", "Genre_1");
-        Book book = new Book("3", "Title", author, Collections.singletonList(genre), null);
-        Book insert = mongoTemplate.insert(book);
+        Genre genre1 = new Genre("1", "Genre_1");
+        Genre genre2 = new Genre("2", "Genre_2");
+        Book book = new Book("1", "Book_1", author, List.of(genre1, genre2), null);
         Comment comment1 = mongoTemplate.insert(new Comment(null, "Content_111", originDate, updateDate, book));
         Comment comment2 = mongoTemplate.insert(new Comment(null, "Content_222", originDate, updateDate, book));
         CommentDTO commentDto2 = commentConverter.toDto(comment2);
@@ -61,7 +60,7 @@ class CommentRepositoryTest {
 
         commentRepository.removeCommentArrayElementById(comment1.getId());
 
-        Optional<Book> byId = bookRepository.findById(insert.getId());
+        Optional<Book> byId = bookRepository.findById(book.getId());
         assertThat(byId)
             .isPresent()
             .get()

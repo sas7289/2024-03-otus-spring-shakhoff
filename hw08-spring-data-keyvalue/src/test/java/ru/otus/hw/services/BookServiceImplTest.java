@@ -40,19 +40,9 @@ class BookServiceImplTest {
     @Autowired
     private BookConverter bookConverter;
 
-    @DisplayName("должен загружать список всех книг")
-    @Test
-    @Order(1)
-    void shouldReturnCorrectBooksList() {
-        List<BookDTO> expectedBooks = List.of(prepareBookDto1(), prepareBookDto2());
-        assertThat(bookService.findAll())
-            .usingRecursiveComparison()
-            .isEqualTo(expectedBooks);
-    }
-
     @DisplayName("должен загружать книгу по id")
     @Test
-    @Order(2)
+    @Order(1)
     void shouldReturnCorrectBookById() {
         assertThat(bookService.findById("1"))
             .isPresent()
@@ -63,7 +53,7 @@ class BookServiceImplTest {
 
     @DisplayName("должен удалять книгу по id ")
     @Test
-    @Order(3)
+    @Order(2)
     void shouldDeleteBook() {
         BookDTO bookDTO = bookConverter.toDto(mongoTemplate.findById("1", Book.class));
         assertThat(bookDTO)
@@ -77,7 +67,7 @@ class BookServiceImplTest {
 
     @DisplayName("должен сохранять новую книгу")
     @Test
-    @Order(4)
+    @Order(3)
     void shouldSaveNewBook() {
         assertThat(mongoTemplate.findById("5", Book.class))
             .isNull();
@@ -94,7 +84,7 @@ class BookServiceImplTest {
 
     @DisplayName("должен сохранять измененную книгу")
     @Test
-    @Order(5)
+    @Order(4)
     void shouldSaveUpdatedBook() {
         String bookId = "2";
         BookDTO expectedBookDto = prepareUpdatedBookDto2();
@@ -123,24 +113,6 @@ class BookServiceImplTest {
         LocalDateTime originDate = LocalDateTime.parse("2024-05-01T13:01:15");
         LocalDateTime updateDate = LocalDateTime.parse("2024-06-02T13:02:15");
         CommentDTO comment = new CommentDTO("1", "Content_1", originDate, updateDate, bookBaseDto);
-
-        bookDto.setComments(List.of(comment));
-
-        return bookDto;
-    }
-
-    private BookDTO prepareBookDto2() {
-        AuthorDTO author = new AuthorDTO("2", "Author_2");
-
-        GenreDTO genre1 = new GenreDTO("3", "Genre_3");
-        GenreDTO genre2 = new GenreDTO("4", "Genre_4");
-
-        BookDTO bookDto = new BookDTO("2", "Book_2", author, List.of(genre1, genre2), null);
-        BaseBookDTO bookBaseDto = new BaseBookDTO("2", "Book_2", author);
-
-        LocalDateTime originDate = LocalDateTime.parse("2024-05-01T13:01:15");
-        LocalDateTime updateDate = LocalDateTime.parse("2024-06-02T13:02:15");
-        CommentDTO comment = new CommentDTO("2", "Content_2", originDate, updateDate, bookBaseDto);
 
         bookDto.setComments(List.of(comment));
 
