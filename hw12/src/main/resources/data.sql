@@ -12,3 +12,12 @@ insert into books_genres(book_id, genre_id)
 values (1, 1),   (1, 2),
        (2, 3),   (2, 4),
        (3, 5),   (3, 6);
+
+insert into users(name, password)
+values ('admin', '$2y$10$acOnSpNyjhEtWsHqpyE6ceIjy9dyoEZ5e62lLHsXCDjSflHgv64/2'), ('user', '$2y$10$9eATQf4sBDwQtPETOJK7Au1eaV97P/Htj3Bwvwe6hpK2xAcUyBNI.');
+
+insert into authorities(name)
+values ('ROLE_admin');
+
+insert into users_authorities(user_id, authority_id)
+values (1, 1);

@@ -1,3 +1,29 @@
+create table authorities
+(
+    id   bigserial,
+    name varchar(255),
+    primary key (id)
+);
+
+create table users
+(
+    id           bigserial,
+    name         varchar(255),
+    password     varchar(255),
+    expired_date datetime,
+--     authority_id bigint references authorities (id) on delete cascade,
+    primary key (id)
+);
+
+create table users_authorities
+(
+    user_id  bigint references users (id) on delete cascade,
+    authority_id bigint references authorities (id) on delete cascade,
+    primary key (user_id, authority_id)
+);
+
+
+
 create table authors
 (
     id        bigserial,
