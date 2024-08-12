@@ -54,7 +54,8 @@ VALUES (1, 1, 1, NULL, 1, 0),
 INSERT INTO acl_entry (id, acl_object_identity, ace_order, sid, mask,
                        granting, audit_success, audit_failure)
 VALUES (1, 1, 1, 1, 1, 1, 1, 1),
-       (2, 1, 2, 2, 1, 1, 1, 1);
+       (2, 1, 2, 2, 1, 1, 1, 1),
+       (3, 3, 2, 2, 1, 1, 1, 1);
 --        (2, 1, 2, 1, 2, 1, 1, 1),
 --        (3, 2, 1, 1, 1, 0, 1, 1),
 --        (4, 2, 2, 1, 2, 1, 1, 1),

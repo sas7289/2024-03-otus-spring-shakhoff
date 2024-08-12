@@ -19,16 +19,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-            .csrf().disable()
-            .authorizeHttpRequests( ( authorize ) -> authorize
-                .antMatchers( "/**", "/" ).permitAll()
-            )
-            .formLogin();
-//                                .csrf(AbstractHttpConfigurer::disable)
-//                                .headers(AbstractHttpConfigurer::disable)
-//                                .formLogin(Customizer.withDefaults())
-//                                .authorizeHttpRequests(authorize -> authorize
-//                                    .anyRequest().authenticated());
+            .csrf(AbstractHttpConfigurer::disable)
+            .headers(AbstractHttpConfigurer::disable)
+            .formLogin(Customizer.withDefaults())
+            .authorizeHttpRequests(authorize -> authorize
+                .anyRequest().authenticated());
 //                .requestMatchers("/books/**").hasAnyRole("admin", "user")
 //                .and().logout()
 //                .anyRequest().denyAll());
