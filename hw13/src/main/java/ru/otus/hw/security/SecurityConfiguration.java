@@ -3,7 +3,6 @@ package ru.otus.hw.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,14 +19,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
-            .headers(AbstractHttpConfigurer::disable)
             .formLogin(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
-                .anyRequest().authenticated());
-//                .requestMatchers("/books/**").hasAnyRole("admin", "user")
-//                .and().logout()
-//                .anyRequest().denyAll());
-//                .anyRequest().permitAll());
+                .anyRequest().hasAnyRole("admin", "user"));
         return httpSecurity.build();
     }
 

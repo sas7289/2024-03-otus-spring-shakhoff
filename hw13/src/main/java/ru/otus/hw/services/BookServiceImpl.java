@@ -17,7 +17,6 @@ import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -46,7 +45,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-//    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     public List<BookDTO> findAll() {
         List<Book> allBooks = bookRepository.findAll();
         return allBooks.stream().map(bookConverter::toDto).collect(Collectors.toList());
