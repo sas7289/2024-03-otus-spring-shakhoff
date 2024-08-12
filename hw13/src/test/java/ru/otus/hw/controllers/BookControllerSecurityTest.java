@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -67,7 +66,7 @@ class BookControllerSecurityTest {
     @DisplayName("должен возвращать книгу по её ID для авторизованных пользователей")
     void shouldGrantAccessToGetBookByIdEndpointForAuthorizedUser(String userName) throws Exception {
         given(bookService.findById(anyLong()))
-            .willReturn(Optional.of(prepareBook(prepareAuthor(), prepareGenre())));
+            .willReturn(prepareBook(prepareAuthor(), prepareGenre()));
         this.mockMvc.perform(get("/books/{bookId}", 1)
             .with(user(userName).authorities(new SimpleGrantedAuthority("ROLE_" + userName))))
             .andExpect(status().isOk());
@@ -88,7 +87,7 @@ class BookControllerSecurityTest {
     @DisplayName("должен возвращать книгу по её ID и соответствующие ей жанры и автора для авторизованных пользователей")
     void shouldGrantAccessToEditBookByIdEndpointForAuthorizedUser(String userName) throws Exception {
         given(bookService.findById(anyLong()))
-            .willReturn(Optional.of(prepareBook(prepareAuthor(), prepareGenre())));
+            .willReturn(prepareBook(prepareAuthor(), prepareGenre()));
         this.mockMvc.perform(get("/books/edit/{bookId}", "1")
             .with(user(userName).authorities(new SimpleGrantedAuthority("ROLE_" + userName))))
             .andExpect(status().isOk());

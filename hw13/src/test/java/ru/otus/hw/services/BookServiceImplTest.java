@@ -1,6 +1,8 @@
 package ru.otus.hw.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.AuthorDTO;
@@ -23,6 +26,7 @@ import ru.otus.hw.dto.BaseBookDTO;
 import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.dto.CommentDTO;
 import ru.otus.hw.dto.GenreDTO;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 
 @SpringBootTest
 @Transactional(propagation = Propagation.NEVER)
@@ -35,33 +39,44 @@ class BookServiceImplTest {
     @DisplayName("должен загружать список всех книг")
     @Test
     @Order(1)
-    void shouldReturnCorrectBooksList() {
+    @WithMockUser(username = "admin")
+    void shouldReturnAllBooksForAdmin() {
         List<BookDTO> actualBooks = bookService.findAll();
         var expectedBooks = getDbBooks();
 
         assertThat(actualBooks).containsExactlyElementsOf(expectedBooks);
     }
 
+    @DisplayName("должен загружать список всех книг")
+    @Test
+    @Order(1)
+    @WithMockUser(username = "user")
+    void shouldReturnEmptyBookListForUser() {
+        List<BookDTO> actualBooks = bookService.findAll();
+
+        assertTrue(actualBooks.isEmpty());
+    }
+
     @DisplayName("должен загружать книгу по id")
     @ParameterizedTest
     @MethodSource("getDbBooks")
+    @WithMockUser(username = "admin")
     @Order(2)
     void shouldReturnCorrectBookById(BookDTO expectedBook) {
         var actualBook = bookService.findById(expectedBook.getId());
-        assertThat(actualBook).isPresent()
-            .get()
-            .isEqualTo(expectedBook);
+        assertThat(actualBook)            .isEqualTo(expectedBook);
     }
 
     @DisplayName("должен удалять книгу по id ")
     @Test
+    @WithMockUser(username = "admin")
     @Order(3)
     void shouldDeleteBook() {
         long bookId = 1;
-        assertThat(bookService.findById(bookId)).isPresent();
+        assertThat(bookService.findById(bookId)).isNotNull();
         bookService.deleteById(1);
 
-        assertThat(bookService.findById(1)).isEmpty();
+        assertThrows(EntityNotFoundException.class, () -> bookService.findById(1));
     }
 
     @DisplayName("должен сохранять новую книгу")
@@ -82,6 +97,7 @@ class BookServiceImplTest {
 
     @DisplayName("должен сохранять измененную книгу")
     @Test
+    @WithMockUser(username = "admin")
     @Order(5)
     void shouldSaveUpdatedBook() {
         var updatedBookTitle = "Updated book title";
@@ -93,8 +109,6 @@ class BookServiceImplTest {
 
 
         assertThat(bookService.findById(bookId))
-            .isPresent()
-            .get()
             .isNotEqualTo(expectedBook);
 
         BookDTO updatedBook = bookService.update(bookId, updatedBookTitle, updatedBookAuthor.getId(), Set.of(updatedBookGenres.get(0).getId()));

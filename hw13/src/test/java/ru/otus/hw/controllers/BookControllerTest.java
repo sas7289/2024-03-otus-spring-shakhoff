@@ -5,9 +5,7 @@ import static org.mockito.BDDMockito.given;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -82,7 +80,7 @@ class BookControllerTest {
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
 
         given(bookService.findById(1))
-            .willReturn(Optional.of(bookDTO));
+            .willReturn(bookDTO);
         given(authorService.findAll())
             .willReturn(List.of(authorDTO));
         given(genreService.findAll())
@@ -105,7 +103,7 @@ class BookControllerTest {
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
 
         given(bookService.findById(1))
-            .willReturn(Optional.of(bookDTO));
+            .willReturn(bookDTO);
         given(authorService.findAll())
             .willReturn(List.of(authorDTO));
         given(genreService.findAll())
@@ -155,7 +153,7 @@ class BookControllerTest {
         GenreDTO genreDTO = prepareGenre();
         BookDTO bookDTO = prepareBook(authorDTO, genreDTO);
         given(bookService.findById(1))
-            .willReturn(Optional.of(bookDTO));
+            .willReturn(bookDTO);
         given(authorService.findAll())
             .willReturn(List.of(authorDTO));
         given(genreService.findAll())
@@ -210,33 +208,6 @@ class BookControllerTest {
         assertThat(bookIdCapture.getValue()).isEqualTo(1);
     }
 
-    @Test
-    @DisplayName("Должен выбрасывать исключение EntityNotFoundException при поиске книги по Id")
-    void shouldThrowEntityNotFoundExceptionWhenFindBookById() throws Exception {
-        int bookId = 1;
-        String expectedExceptionMessage = String.format("Book not found by id: %s", bookId);
-
-        given(bookService.findById(bookId))
-            .willReturn(Optional.empty());
-
-        this.mockMvc.perform(get("/books/{bookId}", "1"))
-            .andExpect(result -> Assertions.assertInstanceOf(RuntimeException.class, result.getResolvedException()))
-            .andExpect(result -> Assertions.assertEquals(expectedExceptionMessage, result.getResolvedException().getMessage()));
-    }
-
-    @Test
-    @DisplayName("Должен выбрасывать исключение EntityNotFoundException при поиске книги по Id для дальнейшего редактирования")
-    void shouldThrowEntityNotFoundExceptionWhenFindBookByIdForEdit() throws Exception {
-        int bookId = 1;
-        String expectedExceptionMessage = String.format("Book not found by id: %s", bookId);
-
-        given(bookService.findById(1))
-            .willReturn(Optional.empty());
-
-        this.mockMvc.perform(get("/books/edit/{bookId}", "1"))
-            .andExpect(result -> Assertions.assertInstanceOf(RuntimeException.class, result.getResolvedException()))
-            .andExpect(result -> Assertions.assertEquals(expectedExceptionMessage, result.getResolvedException().getMessage()));
-    }
 
     private BookDTO prepareBook(AuthorDTO authorDTO, GenreDTO genreDTO) {
         return new BookDTO(1, "BookTitle", authorDTO, List.of(genreDTO), new ArrayList<>());
