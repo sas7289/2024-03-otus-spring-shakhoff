@@ -2,6 +2,7 @@ package ru.otus.example.springbatch.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import java.util.HashMap;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.*;
@@ -26,6 +27,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import ru.otus.example.springbatch.model.Author;
 import ru.otus.example.springbatch.model.AuthorMongo;
 import ru.otus.example.springbatch.model.Book;
+import ru.otus.example.springbatch.model.BookMongo;
 import ru.otus.example.springbatch.model.Genre;
 import ru.otus.example.springbatch.model.GenreMongo;
 import ru.otus.example.springbatch.service.AuthorCacheService;
@@ -130,13 +132,11 @@ public class JobConfig {
     }
 
 
-    @StepScope
     @Bean
     public ItemProcessor<Author, AuthorMongo> authorResetIdProcessor() {
         return item -> new AuthorMongo(null, item.getFullName());
     }
 
-    @StepScope
     @Bean
     public ItemProcessor<Genre, GenreMongo> genreResetIdProcessor() {
         return item -> new GenreMongo(null, item.getName());
@@ -148,14 +148,34 @@ public class JobConfig {
     }
 
     @Bean
+    public ItemProcessor<Book, BookMongo> bookProcessor(AuthorCacheService authorCacheService, GenreCacheService genreCacheService) {
+        return item -> {
+            AuthorMongo authorMongo = authorCacheService.getAuthors().stream()
+                .filter(author -> author.getFullName().equals(item.getAuthor().getFullName()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Author not found"));
+
+            List<String> bookGenres = item.getGenres().stream()
+                .map(Genre::getName)
+                .toList();
+
+            List<GenreMongo> genreMongos = genreCacheService.getGenres().stream()
+                .filter(genre -> bookGenres.contains(genre.getName()))
+                .toList();
+
+            return new BookMongo(null, item.getTitle(), authorMongo, genreMongos);
+        };
+    }
+
+    @Bean
     public ItemProcessor<AuthorMongo, AuthorMongo> authorCacheProcessor(AuthorCacheService cacheService) {
         return cacheService::cache;
     }
 
     @StepScope
     @Bean
-    public MongoItemWriter<Book> mongoBookWriter(MongoTemplate mongoTemplate) {
-        return new MongoItemWriterBuilder<Book>()
+    public MongoItemWriter<BookMongo> mongoBookWriter(MongoTemplate mongoTemplate) {
+        return new MongoItemWriterBuilder<BookMongo>()
             .template(mongoTemplate)
             .collection("books")
             .build();
@@ -201,13 +221,14 @@ public class JobConfig {
 
 
     @Bean
-    public Job transferAuthorJob(Step transferAuthorStep, Step transferGenreStep, Step cleanUpStep, Step cacheAuthorStep, Step cacheGenreStep) {
+    public Job transferAuthorJob(Step transferAuthorStep, Step transferGenreStep, Step cleanUpStep, Step cacheAuthorStep, Step cacheGenreStep, Step transferBookStep) {
         return new JobBuilder(IMPORT_USER_JOB_NAME, jobRepository)
             .incrementer(new RunIdIncrementer())
             .flow(transferAuthorStep)
             .next(transferGenreStep)
             .next(cacheAuthorStep)
             .next(cacheGenreStep)
+            .next(transferBookStep)
             .next(cleanUpStep)
             .end()
             .build();
@@ -230,6 +251,17 @@ public class JobConfig {
             .<Genre, GenreMongo>chunk(CHUNK_SIZE, platformTransactionManager)
             .reader(reader)
             .processor(genreResetIdProcessor)
+            .writer(writer)
+//                .taskExecutor(new SimpleAsyncTaskExecutor())
+            .build();
+    }
+
+    @Bean
+    public Step transferBookStep(JpaPagingItemReader<Book> reader, MongoItemWriter<BookMongo> writer, ItemProcessor<Book, BookMongo> bookProcessor) {
+        return new StepBuilder("transferBookStep", jobRepository)
+            .<Book, BookMongo>chunk(CHUNK_SIZE, platformTransactionManager)
+            .reader(reader)
+            .processor(bookProcessor)
             .writer(writer)
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
             .build();
