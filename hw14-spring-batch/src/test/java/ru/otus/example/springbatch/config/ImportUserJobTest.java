@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.otus.example.springbatch.config.JobConfig.IMPORT_USER_JOB_NAME;
+import static ru.otus.example.springbatch.config.JobConfig.H2_TO_MONGO_JOB_NAME;
 import static ru.otus.example.springbatch.config.JobConfig.INPUT_FILE_NAME;
 import static ru.otus.example.springbatch.config.JobConfig.OUTPUT_FILE_NAME;
 
@@ -56,7 +56,7 @@ class ImportUserJobTest {
         Job job = jobLauncherTestUtils.getJob();
         assertThat(job).isNotNull()
                 .extracting(Job::getName)
-                .isEqualTo(IMPORT_USER_JOB_NAME);
+                .isEqualTo(H2_TO_MONGO_JOB_NAME);
 
         JobParameters parameters = new JobParametersBuilder()
                 .addString(INPUT_FILE_NAME, testInputFileName)

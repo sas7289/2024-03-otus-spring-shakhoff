@@ -24,11 +24,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
-import ru.otus.example.springbatch.model.Author;
+import ru.otus.example.springbatch.model.AuthorJpa;
 import ru.otus.example.springbatch.model.AuthorMongo;
-import ru.otus.example.springbatch.model.Book;
+import ru.otus.example.springbatch.model.BookJpa;
 import ru.otus.example.springbatch.model.BookMongo;
-import ru.otus.example.springbatch.model.Genre;
+import ru.otus.example.springbatch.model.GenreJpa;
 import ru.otus.example.springbatch.model.GenreMongo;
 import ru.otus.example.springbatch.service.AuthorCacheService;
 import ru.otus.example.springbatch.service.CleanUpService;
@@ -42,9 +42,7 @@ public class JobConfig {
     private static final int CHUNK_SIZE = 5;
     private final Logger logger = LoggerFactory.getLogger("Batch");
 
-    public static final String OUTPUT_FILE_NAME = "outputFileName";
-    public static final String INPUT_FILE_NAME = "inputFileName";
-    public static final String IMPORT_USER_JOB_NAME = "importUserJob";
+    public static final String H2_TO_MONGO_JOB_NAME = "h2ToMongoJob";
 
     @Autowired
     private JobRepository jobRepository;
@@ -56,49 +54,36 @@ public class JobConfig {
     @Autowired
     private CleanUpService cleanUpService;
 
-//    @StepScope
-//    @Bean
-//    public FlatFileItemReader<Person> reader(@Value("#{jobParameters['" + INPUT_FILE_NAME + "']}") String inputFileName) {
-//        return new FlatFileItemReaderBuilder<Person>()
-//                .name("personItemReader")
-//                .resource(new ClassPathResource(inputFileName))
-//
-//                .delimited()
-//                .names("name", "age")
-//                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-//                    setTargetType(Person.class);
-//                }}).build();
-//    }
 
     @StepScope
     @Bean
-    public JpaPagingItemReader<Book> jpaBookReader(EntityManagerFactory entityManagerFactory) {
-        return new JpaPagingItemReaderBuilder<Book>()
+    public JpaPagingItemReader<BookJpa> jpaBookReader(EntityManagerFactory entityManagerFactory) {
+        return new JpaPagingItemReaderBuilder<BookJpa>()
             .name("jpaBookReader")
             .entityManagerFactory(entityManagerFactory)
-            .queryString("select b from Book b")
+            .queryString("select b from BookJpa b")
             .pageSize(100)
             .build();
     }
 
     @StepScope
     @Bean
-    public JpaPagingItemReader<Author> jpaAuthorReader(EntityManagerFactory entityManagerFactory) {
-        return new JpaPagingItemReaderBuilder<Author>()
+    public JpaPagingItemReader<AuthorJpa> jpaAuthorReader(EntityManagerFactory entityManagerFactory) {
+        return new JpaPagingItemReaderBuilder<AuthorJpa>()
             .name("jpaAuthorReader")
             .entityManagerFactory(entityManagerFactory)
-            .queryString("select a from Author a")
+            .queryString("select a from AuthorJpa a")
             .pageSize(100)
             .build();
     }
 
     @StepScope
     @Bean
-    public JpaPagingItemReader<Genre> jpaGenreReader(EntityManagerFactory entityManagerFactory) {
-        return new JpaPagingItemReaderBuilder<Genre>()
+    public JpaPagingItemReader<GenreJpa> jpaGenreReader(EntityManagerFactory entityManagerFactory) {
+        return new JpaPagingItemReaderBuilder<GenreJpa>()
             .name("jpaGenreReader")
             .entityManagerFactory(entityManagerFactory)
-            .queryString("select g from Genre g")
+            .queryString("select g from GenreJpa g")
             .pageSize(100)
             .build();
     }
@@ -133,12 +118,12 @@ public class JobConfig {
 
 
     @Bean
-    public ItemProcessor<Author, AuthorMongo> authorResetIdProcessor() {
+    public ItemProcessor<AuthorJpa, AuthorMongo> authorResetIdProcessor() {
         return item -> new AuthorMongo(null, item.getFullName());
     }
 
     @Bean
-    public ItemProcessor<Genre, GenreMongo> genreResetIdProcessor() {
+    public ItemProcessor<GenreJpa, GenreMongo> genreResetIdProcessor() {
         return item -> new GenreMongo(null, item.getName());
     }
 
@@ -148,15 +133,15 @@ public class JobConfig {
     }
 
     @Bean
-    public ItemProcessor<Book, BookMongo> bookProcessor(AuthorCacheService authorCacheService, GenreCacheService genreCacheService) {
+    public ItemProcessor<BookJpa, BookMongo> bookProcessor(AuthorCacheService authorCacheService, GenreCacheService genreCacheService) {
         return item -> {
             AuthorMongo authorMongo = authorCacheService.getAuthors().stream()
-                .filter(author -> author.getFullName().equals(item.getAuthor().getFullName()))
+                .filter(author -> author.getFullName().equals(item.getAuthorJpa().getFullName()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new RuntimeException("AuthorJpa not found"));
 
-            List<String> bookGenres = item.getGenres().stream()
-                .map(Genre::getName)
+            List<String> bookGenres = item.getGenreJpas().stream()
+                .map(GenreJpa::getName)
                 .toList();
 
             List<GenreMongo> genreMongos = genreCacheService.getGenres().stream()
@@ -199,17 +184,6 @@ public class JobConfig {
             .build();
     }
 
-//    @StepScope
-//    @Bean
-//    public FlatFileItemWriter<Person> writer(@Value("#{jobParameters['" + OUTPUT_FILE_NAME + "']}") String outputFileName) {
-//        return new FlatFileItemWriterBuilder<Person>()
-//                .name("personItemWriter")
-//                .resource(new FileSystemResource(outputFileName))
-//                .lineAggregator(new DelimitedLineAggregator<>())
-//                .build();
-//    }
-
-
     @Bean
     public MethodInvokingTaskletAdapter cleanUpTasklet() {
         MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
@@ -221,8 +195,9 @@ public class JobConfig {
 
 
     @Bean
-    public Job transferAuthorJob(Step transferAuthorStep, Step transferGenreStep, Step cleanUpStep, Step cacheAuthorStep, Step cacheGenreStep, Step transferBookStep) {
-        return new JobBuilder(IMPORT_USER_JOB_NAME, jobRepository)
+    public Job transferAuthorJob(Step transferAuthorStep, Step transferGenreStep, Step cleanUpStep, Step cacheAuthorStep, Step cacheGenreStep,
+                                 Step transferBookStep) {
+        return new JobBuilder(H2_TO_MONGO_JOB_NAME, jobRepository)
             .incrementer(new RunIdIncrementer())
             .flow(transferAuthorStep)
             .next(transferGenreStep)
@@ -235,35 +210,35 @@ public class JobConfig {
     }
 
     @Bean
-    public Step transferAuthorStep(JpaPagingItemReader<Author> reader, MongoItemWriter<AuthorMongo> writer, ItemProcessor<Author, AuthorMongo> authorResetIdProcessor) {
+    public Step transferAuthorStep(JpaPagingItemReader<AuthorJpa> reader, MongoItemWriter<AuthorMongo> writer,
+                                   ItemProcessor<AuthorJpa, AuthorMongo> authorResetIdProcessor) {
         return new StepBuilder("transferAuthorStep", jobRepository)
-            .<Author, AuthorMongo>chunk(CHUNK_SIZE, platformTransactionManager)
+            .<AuthorJpa, AuthorMongo>chunk(CHUNK_SIZE, platformTransactionManager)
             .reader(reader)
             .processor(authorResetIdProcessor)
             .writer(writer)
-//                .taskExecutor(new SimpleAsyncTaskExecutor())
             .build();
     }
 
     @Bean
-    public Step transferGenreStep(JpaPagingItemReader<Genre> reader, MongoItemWriter<GenreMongo> writer, ItemProcessor<Genre, GenreMongo> genreResetIdProcessor) {
+    public Step transferGenreStep(JpaPagingItemReader<GenreJpa> reader, MongoItemWriter<GenreMongo> writer,
+                                  ItemProcessor<GenreJpa, GenreMongo> genreResetIdProcessor) {
         return new StepBuilder("transferGenreStep", jobRepository)
-            .<Genre, GenreMongo>chunk(CHUNK_SIZE, platformTransactionManager)
+            .<GenreJpa, GenreMongo>chunk(CHUNK_SIZE, platformTransactionManager)
             .reader(reader)
             .processor(genreResetIdProcessor)
             .writer(writer)
-//                .taskExecutor(new SimpleAsyncTaskExecutor())
             .build();
     }
 
     @Bean
-    public Step transferBookStep(JpaPagingItemReader<Book> reader, MongoItemWriter<BookMongo> writer, ItemProcessor<Book, BookMongo> bookProcessor) {
+    public Step transferBookStep(JpaPagingItemReader<BookJpa> reader, MongoItemWriter<BookMongo> writer,
+                                 ItemProcessor<BookJpa, BookMongo> bookProcessor) {
         return new StepBuilder("transferBookStep", jobRepository)
-            .<Book, BookMongo>chunk(CHUNK_SIZE, platformTransactionManager)
+            .<BookJpa, BookMongo>chunk(CHUNK_SIZE, platformTransactionManager)
             .reader(reader)
             .processor(bookProcessor)
             .writer(writer)
-//                .taskExecutor(new SimpleAsyncTaskExecutor())
             .build();
     }
 
@@ -273,8 +248,8 @@ public class JobConfig {
             .<AuthorMongo, AuthorMongo>chunk(CHUNK_SIZE, platformTransactionManager)
             .reader(mongoAuthorReader)
             .processor(authorCacheProcessor)
-            .writer(chunk -> {})
-//                .taskExecutor(new SimpleAsyncTaskExecutor())
+            .writer(chunk -> {
+            })
             .build();
     }
 
@@ -284,89 +259,10 @@ public class JobConfig {
             .<GenreMongo, GenreMongo>chunk(CHUNK_SIZE, platformTransactionManager)
             .reader(mongoGenreReader)
             .processor(genreCacheProcessor)
-            .writer(chunk -> {})
-//                .taskExecutor(new SimpleAsyncTaskExecutor())
+            .writer(chunk -> {
+            })
             .build();
     }
-
-//    @Bean
-//    public Step testGenreStep(MongoPagingItemReader<GenreMongo> mongoGenreReader) {
-//        return new StepBuilder("transformPersonsStep", jobRepository)
-//            .<GenreMongo, GenreMongo>chunk(CHUNK_SIZE, platformTransactionManager)
-//            .reader(mongoGenreReader)
-//            .processor(item -> {
-//                System.out.println(item.getName());
-//                return item;
-//            })
-////            .writer(writer)
-////                .taskExecutor(new SimpleAsyncTaskExecutor())
-//            .build();
-//    }
-
-//    @Bean
-//    public Step transformPersonsStep(JpaPagingItemReader<Book> reader, MongoItemWriter<Book> writer,
-//                                     ItemProcessor<Book, Book> itemProcessor) {
-//        return new StepBuilder("transformPersonsStep", jobRepository)
-//                .<Book, Book>chunk(CHUNK_SIZE, platformTransactionManager)
-//                .reader(reader)
-//                .processor(itemProcessor)
-//            .processor()
-//                .writer(writer)
-//                .listener(new ItemReadListener<>() {
-//                    public void beforeRead() {
-//                        logger.info("Начало чтения");
-//                    }
-//
-//                    public void afterRead(@NonNull Book o) {
-//                        logger.info("Конец чтения: " + o.getTitle());
-//                    }
-//
-//                    public void onReadError(@NonNull Exception e) {
-//                        logger.info("Ошибка чтения");
-//                    }
-//                })
-//                .listener(new ItemWriteListener<Book>() {
-//                    public void beforeWrite(@NonNull List<Book> list) {
-//                        logger.info("Начало записи");
-//                    }
-//
-//                    public void afterWrite(@NonNull List<Book> list) {
-//                        logger.info("Конец записи");
-//                    }
-//
-//                    public void onWriteError(@NonNull Exception e, @NonNull List<Book> list) {
-//                        logger.info("Ошибка записи");
-//                    }
-//                })
-//                .listener(new ItemProcessListener<>() {
-//                    public void beforeProcess(@NonNull Book o) {
-//                        logger.info("Начало обработки");
-//                    }
-//
-//                    public void afterProcess(@NonNull Book o, Book o2) {
-//                        logger.info("Конец обработки");
-//                    }
-//
-//                    public void onProcessError(@NonNull Book o, @NonNull Exception e) {
-//                        logger.info("Ошибка обработки");
-//                    }
-//                })
-//                .listener(new ChunkListener() {
-//                    public void beforeChunk(@NonNull ChunkContext chunkContext) {
-//                        logger.info("Начало пачки");
-//                    }
-//
-//                    public void afterChunk(@NonNull ChunkContext chunkContext) {
-//                        logger.info("Конец пачки");
-//                    }
-//
-//                    public void afterChunkError(@NonNull ChunkContext chunkContext) {
-//                        logger.info("Ошибка пачки");
-//                    }
-//                })
-////                .taskExecutor(new SimpleAsyncTaskExecutor())
-//                .build();
-//    }
 
     @Bean
     public Step cleanUpStep(AuthorCacheService authorCacheService) {
@@ -375,7 +271,7 @@ public class JobConfig {
             .listener(new StepExecutionListener() {
                 @Override
                 public ExitStatus afterStep(StepExecution stepExecution) {
-                    authorCacheService.getAuthors().forEach(author ->  logger.info("add author " + author.getFullName()));
+                    authorCacheService.getAuthors().forEach(author -> logger.info("add author " + author.getFullName()));
                     return StepExecutionListener.super.afterStep(stepExecution);
                 }
             })
