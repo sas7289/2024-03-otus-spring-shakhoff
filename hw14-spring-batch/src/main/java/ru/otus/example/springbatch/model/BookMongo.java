@@ -26,7 +26,9 @@ public class BookMongo {
     //    @ToString.Exclude
 //    @EqualsAndHashCode.Exclude
 //    @ManyToOne(fetch = FetchType.LAZY)
+    @DBRef
     private AuthorMongo author;
 
+    @DBRef
     private List<GenreMongo> genres;
 }
