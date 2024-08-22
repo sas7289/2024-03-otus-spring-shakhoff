@@ -29,7 +29,7 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "books")
 @NamedEntityGraph(name = "authors-entity-graph",
-    attributeNodes = {@NamedAttributeNode("authorJpa")})
+    attributeNodes = {@NamedAttributeNode("author")})
 public class BookJpa {
 
     @Id
@@ -41,15 +41,15 @@ public class BookJpa {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author_id")
-    private AuthorJpa authorJpa;
+    private AuthorJpa author;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(targetEntity = GenreJpa.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(targetEntity = GenreJpa.class, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private List<GenreJpa> genreJpas;
+    private List<GenreJpa> genres;
 }

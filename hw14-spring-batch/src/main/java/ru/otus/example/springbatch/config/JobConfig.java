@@ -136,11 +136,11 @@ public class JobConfig {
     public ItemProcessor<BookJpa, BookMongo> bookProcessor(AuthorCacheService authorCacheService, GenreCacheService genreCacheService) {
         return item -> {
             AuthorMongo authorMongo = authorCacheService.getAuthors().stream()
-                .filter(author -> author.getFullName().equals(item.getAuthorJpa().getFullName()))
+                .filter(author -> author.getFullName().equals(item.getAuthor().getFullName()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("AuthorJpa not found"));
 
-            List<String> bookGenres = item.getGenreJpas().stream()
+            List<String> bookGenres = item.getGenres().stream()
                 .map(GenreJpa::getName)
                 .toList();
 

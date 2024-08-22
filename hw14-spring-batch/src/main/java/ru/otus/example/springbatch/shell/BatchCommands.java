@@ -1,7 +1,6 @@
 package ru.otus.example.springbatch.shell;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -14,10 +13,6 @@ import static ru.otus.example.springbatch.config.JobConfig.H2_TO_MONGO_JOB_NAME;
 @ShellComponent
 public class BatchCommands {
     private final JobOperator jobOperator;
-    private final JobExplorer jobExplorer;
-
-    //http://localhost:8080/h2-console/
-
 
     @SuppressWarnings("unused")
     @ShellMethod(value = "data migration from H2 database to MongoDB", key = "sm-hm")
@@ -25,12 +20,4 @@ public class BatchCommands {
         Long executionId = jobOperator.start(H2_TO_MONGO_JOB_NAME, new Properties());
         System.out.println(jobOperator.getSummary(executionId));
     }
-
-    @SuppressWarnings("unused")
-    @ShellMethod(value = "showInfo", key = "i")
-    public void showInfo() {
-        System.out.println(jobExplorer.getJobNames());
-        System.out.println(jobExplorer.getLastJobInstance(H2_TO_MONGO_JOB_NAME));
-    }
-
 }

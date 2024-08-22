@@ -51,10 +51,3 @@ mongock:
     write-concern:
       journal: false
     read-concern: local
-
-app:
-  ages-count-to-add: 1
-  input-file: entries.csv
-  output-file: output.dat
-
-#debug: true
