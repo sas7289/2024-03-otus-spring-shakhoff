@@ -11,6 +11,7 @@ import ru.otus.example.springbatch.model.GenreMongo;
 @Getter
 @Slf4j
 public class GenreCacheService {
+
     List<GenreMongo> genres = new ArrayList<>();
 
     public GenreMongo cache(GenreMongo genreMongo) {

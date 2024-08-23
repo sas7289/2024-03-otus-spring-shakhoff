@@ -43,10 +43,7 @@ class JobConfigTest {
         jobRepositoryTestUtils.removeJobExecutions();
     }
 
-    @Test void test() throws Exception {
-        jobLauncherTestUtils.getJob();
-        System.out.println("tst");
-
+    @Test void shouldMigrateDataFormH2ToMongo() throws Exception {
         List<BookJpa> jpaBooks = entityManager.createQuery("select b from BookJpa b order by b.title", BookJpa.class).getResultList();
         List<BookJpa> expectedBooks = prepareBooks();
 
@@ -68,14 +65,12 @@ class JobConfigTest {
             .toJobParameters();
         JobExecution jobExecution = jobLauncherTestUtils.launchJob(parameters);
         assertThat(jobExecution.getExitStatus().getExitCode()).isEqualTo("COMPLETED");
-        List<BookMongo> all = mongoTemplate.findAll(BookMongo.class);
 
-
-        assertThat(all)
+        List<BookMongo> mongoBooksAfterExecution = mongoTemplate.findAll(BookMongo.class);
+        assertThat(mongoBooksAfterExecution)
             .usingRecursiveComparison()
             .ignoringFields("id", "author.id", "genres.id")
             .isEqualTo(expectedBooks);
-        all.size();
     }
 
 

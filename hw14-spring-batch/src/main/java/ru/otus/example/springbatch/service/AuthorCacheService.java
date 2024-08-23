@@ -11,6 +11,7 @@ import ru.otus.example.springbatch.model.AuthorMongo;
 @Getter
 @Slf4j
 public class AuthorCacheService {
+
     List<AuthorMongo> authors = new ArrayList<>();
 
     public AuthorMongo cache(AuthorMongo authorMongo) {

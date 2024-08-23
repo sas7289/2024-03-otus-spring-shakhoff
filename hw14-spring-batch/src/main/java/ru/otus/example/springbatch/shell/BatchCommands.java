@@ -12,9 +12,9 @@ import static ru.otus.example.springbatch.config.JobConfig.H2_TO_MONGO_JOB_NAME;
 @RequiredArgsConstructor
 @ShellComponent
 public class BatchCommands {
+
     private final JobOperator jobOperator;
 
-    @SuppressWarnings("unused")
     @ShellMethod(value = "data migration from H2 database to MongoDB", key = "sm-hm")
     public void migrationH2ToMongo() throws Exception {
         Long executionId = jobOperator.start(H2_TO_MONGO_JOB_NAME, new Properties());
