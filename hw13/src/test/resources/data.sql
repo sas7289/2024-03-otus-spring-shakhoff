@@ -1,17 +1,28 @@
 insert into authors(full_name)
-values ('Author_1'), ('Author_2'), ('Author_3');
+values ('Author_1'),
+       ('Author_2'),
+       ('Author_3');
 
 insert into genres(name)
-values ('Genre_1'), ('Genre_2'), ('Genre_3'),
-       ('Genre_4'), ('Genre_5'), ('Genre_6');
+values ('Genre_1'),
+       ('Genre_2'),
+       ('Genre_3'),
+       ('Genre_4'),
+       ('Genre_5'),
+       ('Genre_6');
 
 insert into books(title, author_id)
-values ('BookTitle_1', 1), ('BookTitle_2', 2), ('BookTitle_3', 3);
+values ('BookTitle_1', 1),
+       ('BookTitle_2', 2),
+       ('BookTitle_3', 3);
 
 insert into books_genres(book_id, genre_id)
-values (1, 1),   (1, 2),
-       (2, 3),   (2, 4),
-       (3, 5),   (3, 6);
+values (1, 1),
+       (1, 2),
+       (2, 3),
+       (2, 4),
+       (3, 5),
+       (3, 6);
 
 insert into comments(content, created_date, updated_date, book_id)
 values ('Content_1', '2024-05-01 13:01:15', '2024-06-01 13:01:15', 1),
@@ -32,22 +43,22 @@ values (1, 1),
        (2, 2);
 
 
-INSERT INTO acl_sid (id, principal, sid)
-VALUES (1, 1, 'admin'),
-       (2, 1, 'user');
+INSERT INTO acl_sid (principal, sid)
+VALUES (1, 'admin'),
+       (1, 'user');
 --                                              (3, 0, 'ROLE_EDITOR');
 
-INSERT INTO acl_class (id, class)
+INSERT INTO acl_class (class)
 -- VALUES (1, 'ru.otus.hw.models.Book');
-VALUES (1, 'ru.otus.hw.dto.BookDTO');
+VALUES ('ru.otus.hw.dto.BookDTO');
 
-INSERT INTO acl_object_identity (id, object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting)
-VALUES (1, 1, 1, NULL, 1, 0),
-       (2, 1, 2, NULL, 1, 0),
-       (3, 1, 3, NULL, 1, 0);
+INSERT INTO acl_object_identity (object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting)
+VALUES (1, 1, NULL, 1, 0),
+       (1, 2, NULL, 1, 0),
+       (1, 3, NULL, 1, 0);
 
-INSERT INTO acl_entry (id, acl_object_identity, ace_order, sid, mask,
+INSERT INTO acl_entry (acl_object_identity, ace_order, sid, mask,
                        granting, audit_success, audit_failure)
-VALUES (1, 1, 1, 1, 1, 1, 1, 1),
-       (2, 2, 1, 1, 1, 1, 1, 1),
-       (3, 3, 1, 1, 1, 1, 1, 1);
+VALUES (1, 1, 1, 1, 1, 1, 1),
+       (2, 1, 1, 1, 1, 1, 1),
+       (3, 1, 1, 1, 1, 1, 1);

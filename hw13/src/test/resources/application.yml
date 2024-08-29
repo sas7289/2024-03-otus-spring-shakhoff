@@ -3,7 +3,7 @@ spring:
     interactive:
       enabled: false
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;MODE=LEGACY;
   sql:
     init:
       mode: always
