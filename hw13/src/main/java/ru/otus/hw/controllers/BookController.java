@@ -64,7 +64,7 @@ public class BookController {
     @PostMapping("/books")
     public String insertBook(@RequestParam String title, @RequestParam long authorId,
                              @RequestParam Set<Long> genresIds) {
-        var savedBook = bookService.insert(title, authorId, genresIds);
+        bookService.insert(title, authorId, genresIds);
         return "redirect:/books";
     }
 

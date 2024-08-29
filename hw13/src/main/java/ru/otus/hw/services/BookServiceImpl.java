@@ -4,6 +4,13 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.domain.GrantedAuthoritySid;
+import org.springframework.security.acls.domain.ObjectIdentityImpl;
+import org.springframework.security.acls.domain.PrincipalSid;
+import org.springframework.security.acls.model.MutableAclService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverter;
@@ -34,6 +41,8 @@ public class BookServiceImpl implements BookService {
 
     private final CommentRepository commentRepository;
 
+    private final PermissionService permissionService;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -54,8 +63,13 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDTO insert(String title, long authorId, Set<Long> genresIds) {
-        Book savedBook = save(0, title, authorId, genresIds);
-        return bookConverter.toDto(savedBook);
+        BookDTO savedBook = bookConverter.toDto(save(0, title, authorId, genresIds));
+        ObjectIdentityImpl objectIdentity = new ObjectIdentityImpl(savedBook);
+        GrantedAuthoritySid roleAdmin = new GrantedAuthoritySid("ROLE_admin");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalSid owner = new PrincipalSid(authentication);
+        permissionService.addPermissionForAuthority(BasePermission.READ, objectIdentity, owner, roleAdmin);
+        return savedBook;
     }
 
     @Override

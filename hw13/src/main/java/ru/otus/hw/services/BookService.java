@@ -1,9 +1,7 @@
 package ru.otus.hw.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import org.springframework.security.access.prepost.PostFilter;
 import ru.otus.hw.dto.BookDTO;
 
 public interface BookService {
