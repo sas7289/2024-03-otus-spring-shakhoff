@@ -8,7 +8,6 @@ import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.GrantedAuthoritySid;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
-import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -64,12 +63,16 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public BookDTO insert(String title, long authorId, Set<Long> genresIds) {
         BookDTO savedBook = bookConverter.toDto(save(0, title, authorId, genresIds));
+        addPermission(savedBook);
+        return savedBook;
+    }
+
+    private void addPermission(BookDTO savedBook) {
         ObjectIdentityImpl objectIdentity = new ObjectIdentityImpl(savedBook);
         GrantedAuthoritySid roleAdmin = new GrantedAuthoritySid("ROLE_admin");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PrincipalSid owner = new PrincipalSid(authentication);
         permissionService.addPermissionForAuthority(BasePermission.READ, objectIdentity, owner, roleAdmin);
-        return savedBook;
     }
 
     @Override
