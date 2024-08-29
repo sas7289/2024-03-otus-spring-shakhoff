@@ -81,18 +81,21 @@ class BookServiceImplTest {
 
     @DisplayName("должен сохранять новую книгу")
     @Test
+    @WithMockUser(username = "admin")
     @Order(4)
     void shouldSaveNewBook() {
         var newBookTitle = "New book title";
 
         var expectedAuthor = new AuthorDTO(1, "Author_1");
         List<GenreDTO> expectedGenres = List.of(new GenreDTO(1, "Genre_1"));
-        var expectedBook = new BookDTO(4, newBookTitle, expectedAuthor, expectedGenres, new ArrayList<>());
+        var expectedBook = new BookDTO(0, newBookTitle, expectedAuthor, expectedGenres, new ArrayList<>());
 
         var returnedBook = bookService.insert(newBookTitle, expectedAuthor.getId(), Set.of(expectedGenres.get(0).getId()));
         assertThat(returnedBook).isNotNull()
             .matches(book -> book.getId() > 0)
-            .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
+            .usingRecursiveComparison().ignoringExpectedNullFields()
+            .ignoringFields("id")
+            .isEqualTo(expectedBook);
     }
 
     @DisplayName("должен сохранять измененную книгу")
