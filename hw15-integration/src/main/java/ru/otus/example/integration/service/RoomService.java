@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class RoomService {
 
     public Room build(EngineeringDocument engineeringDocument) {
-        return new Room(engineeringDocument.getRoomName(), Math.multiplyExact(engineeringDocument.getLength(), engineeringDocument.getWidth()));
+        return new Room(engineeringDocument.getRoomName(), Math.multiplyExact(engineeringDocument.getLength(),
+            engineeringDocument.getWidth()));
     }
 }

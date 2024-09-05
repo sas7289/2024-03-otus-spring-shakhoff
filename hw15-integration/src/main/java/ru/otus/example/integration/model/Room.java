@@ -8,5 +8,6 @@ import lombok.Getter;
 public class Room {
 
     private String name;
+
     private int square;
 }

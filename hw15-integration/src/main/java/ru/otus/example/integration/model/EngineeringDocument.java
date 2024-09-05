@@ -8,6 +8,8 @@ import lombok.Getter;
 public class EngineeringDocument {
 
     private String roomName;
+
     private int width;
+
     private int length;
 }

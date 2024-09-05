@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BuildingService {
 
-    private static final String[] DOCUMENTS = {"Reactor Building", "Turbine Hall", "Administrative and Service Areas", "Nuclear Fuel Storage",
-        "Control Room", "Waste Processing and Storage", "Emergency Cooling and Safety Systems", "Energy Systems and Pump Stations",
-        "Chemical Reagent Storage", "Technical and Auxiliary Facilities"};
+    private static final String[] DOCUMENTS = {"Reactor Building", "Turbine Hall", "Administrative and Service Areas",
+        "Nuclear Fuel Storage", "Control Room", "Waste Processing and Storage", "Emergency Cooling and Safety Systems",
+        "Energy Systems and Pump Stations", "Chemical Reagent Storage", "Technical and Auxiliary Facilities"};
 
     private final BuildingGateWay gateWay;
 

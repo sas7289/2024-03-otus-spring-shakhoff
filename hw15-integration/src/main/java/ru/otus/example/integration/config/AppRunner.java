@@ -12,7 +12,7 @@ import ru.otus.example.integration.service.BuildingService;
 @Component
 @RequiredArgsConstructor
 public class AppRunner implements CommandLineRunner {
-	final BuildingService buildingService;
+	private final BuildingService buildingService;
 
 	@Override
 	public void run(String... args) {
