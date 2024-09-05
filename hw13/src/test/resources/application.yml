@@ -1,0 +1,15 @@
+spring:
+  shell:
+    interactive:
+      enabled: false
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=LEGACY;
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
