@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class Document {
+public class EngineeringDocument {
 
     private String roomName;
     private int width;
