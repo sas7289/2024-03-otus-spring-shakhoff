@@ -22,3 +22,6 @@ management:
       enabled: true
     health:
       show-details: always
+logging:
+  file:
+    name: hw16-actuator.log
